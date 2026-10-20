@@ -110,7 +110,7 @@ Pendiente para cerrar el hito:
 
 - [x] Mario: crear el proyecto de Supabase en `eu-central-1` (ref `dnwzdrnleixdeamqtifa`). Sus URLs de Auth están en `[remotes.cloud]` de `supabase/config.toml`.
 - [x] Auth configurado en la nube con `supabase config push` (URLs, confirmación de email, 12 caracteres, `secure_password_change`, sin MFA por ahora) y migración aplicada con `supabase db push` (comprobado con `migration list`).
-- [x] Tests de pgTAP contra la nube (`supabase test db --linked`): todos los de aislamiento en verde a la primera. El de invariantes detectó `public.rls_auto_enable()`, una función de _event trigger_ que crea Supabase en la nube (activa RLS en tablas nuevas, por el nombre); como no se puede invocar, el invariante ahora excluye las funciones de trigger. Pendiente de confirmar el 95/95 tras el ajuste. Nota: el CLI deja instalada la extensión `pgtap` en la nube (inofensiva, esquema no expuesto).
+- [x] Tests de pgTAP contra la nube (`supabase test db --linked`): todos los de aislamiento en verde a la primera. El de invariantes detectó `public.rls_auto_enable()`, una función de _event trigger_ que crea Supabase en la nube (activa RLS en tablas nuevas, por el nombre); como no se puede invocar, el invariante ahora excluye las funciones de trigger. Tras el ajuste, 95/95 en la nube. Nota: el CLI deja instalada la extensión `pgtap` en la nube (inofensiva, esquema no expuesto).
 - [ ] Variables `NEXT_PUBLIC_SUPABASE_URL` y `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` en Vercel (no la clave secreta).
 - [ ] Probar en la vista previa: registro con el email de Mario (el SMTP incluido solo envía a miembros del equipo de Supabase; abrir el enlace en el mismo navegador), crear organización e invitar.
 - [ ] CI en verde en el PR y revisión de Mario.
