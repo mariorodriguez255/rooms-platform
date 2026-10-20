@@ -1,0 +1,157 @@
+{
+  "metadata": {
+    "title": "rooms-platform",
+    "description": "Gestión de alquiler por habitaciones: candidatos, selección e inquilinos en un solo sitio."
+  },
+  "home": {
+    "tagline": "Sigue publicando en idealista, Badi o Airbnb; todo lo que pasa después lo gestionas aquí.",
+    "login": "Iniciar sesión",
+    "signup": "Crear cuenta"
+  },
+  "common": {
+    "email": "Email",
+    "password": "Contraseña",
+    "fullName": "Nombre y apellidos",
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "loading": "Cargando…",
+    "saved": "Cambios guardados."
+  },
+  "roles": {
+    "owner": "Propietario",
+    "admin": "Administrador",
+    "staff": "Equipo"
+  },
+  "auth": {
+    "login": {
+      "title": "Iniciar sesión",
+      "submit": "Entrar",
+      "forgotPassword": "¿Has olvidado la contraseña?",
+      "noAccount": "¿No tienes cuenta?",
+      "signupLink": "Crea una",
+      "resend": "Reenviar el email de confirmación",
+      "resent": "Te hemos enviado otro email de confirmación."
+    },
+    "signup": {
+      "title": "Crear cuenta",
+      "submit": "Crear cuenta",
+      "passwordHint": "Mínimo 12 caracteres. Una frase de varias palabras es fácil de recordar y difícil de adivinar.",
+      "hasAccount": "¿Ya tienes cuenta?",
+      "loginLink": "Inicia sesión",
+      "checkEmailTitle": "Revisa tu email",
+      "checkEmail": "Si {email} no tenía cuenta todavía, te hemos enviado un enlace para confirmarlo. Ábrelo para terminar de crear tu cuenta."
+    },
+    "forgotPassword": {
+      "title": "Recuperar la contraseña",
+      "description": "Te enviaremos un enlace para elegir una contraseña nueva.",
+      "submit": "Enviar enlace",
+      "sent": "Si {email} tiene cuenta, te hemos enviado un enlace. Caduca en una hora.",
+      "backToLogin": "Volver a iniciar sesión"
+    },
+    "resetPassword": {
+      "title": "Elige una contraseña nueva",
+      "newPassword": "Contraseña nueva",
+      "confirmPassword": "Repite la contraseña",
+      "submit": "Guardar contraseña"
+    },
+    "signOut": "Cerrar sesión"
+  },
+  "onboarding": {
+    "title": "Crea tu organización",
+    "description": "Es tu empresa o tu marca como operador. Podrás invitar a tu equipo después.",
+    "name": "Nombre de la organización",
+    "namePlaceholder": "Por ejemplo: Pisos Centro",
+    "submit": "Crear organización"
+  },
+  "nav": {
+    "dashboard": "Panel",
+    "organization": "Organización",
+    "members": "Miembros",
+    "switchOrganization": "Cambiar de organización",
+    "newOrganization": "Crear otra organización",
+    "account": "Mi cuenta"
+  },
+  "dashboard": {
+    "title": "Panel",
+    "welcome": "Estás trabajando en {organization}.",
+    "emptyTitle": "Aquí verás tus habitaciones",
+    "emptyDescription": "Pronto podrás dar de alta tus pisos y habitaciones y ver de un vistazo cuáles están libres, ocupadas o a punto de liberarse."
+  },
+  "settings": {
+    "organization": {
+      "title": "Organización",
+      "description": "Datos de tu organización.",
+      "name": "Nombre",
+      "readOnly": "Solo los propietarios y administradores pueden cambiar estos datos."
+    },
+    "members": {
+      "title": "Miembros",
+      "description": "Las personas que trabajan en {organization}.",
+      "you": "(tú)",
+      "changeRole": "Cambiar el rol de {name}",
+      "remove": "Quitar",
+      "removeTitle": "¿Quitar a {name}?",
+      "removeDescription": "Dejará de tener acceso a {organization}. Podrás volver a invitarle cuando quieras.",
+      "leave": "Salir de la organización",
+      "leaveShort": "Salir",
+      "leaveTitle": "¿Salir de {organization}?",
+      "leaveDescription": "Perderás el acceso. Para volver, alguien tendrá que invitarte de nuevo.",
+      "rolesHelp": "Equipo: trabajo diario. Administrador: además, gestiona miembros y datos de la organización. Propietario: además, gestiona propietarios y facturación."
+    },
+    "invitations": {
+      "title": "Invitar a alguien",
+      "description": "Genera un enlace de invitación y envíaselo tú por email o WhatsApp. Caduca en 7 días y solo sirve para el email indicado.",
+      "email": "Email de la persona",
+      "role": "Rol",
+      "submit": "Generar enlace",
+      "linkTitle": "Enlace de invitación para {email}",
+      "linkHelp": "Cópialo ahora: por seguridad no lo guardamos y no podrás volver a verlo. Si lo pierdes, genera otro.",
+      "copy": "Copiar enlace",
+      "copied": "Copiado",
+      "pendingTitle": "Invitaciones pendientes",
+      "noPending": "No hay invitaciones pendientes.",
+      "expires": "Caduca el {date}",
+      "expired": "Caducada",
+      "revoke": "Anular"
+    }
+  },
+  "invite": {
+    "title": "Invitación",
+    "pending": "Te han invitado a unirte a {organization} como {role}.",
+    "accept": "Aceptar invitación",
+    "emailMismatch": "Esta invitación es para otro email. Inicia sesión con la cuenta del email al que te invitaron.",
+    "expired": "Esta invitación ha caducado. Pide a quien te invitó que genere otra.",
+    "revoked": "Esta invitación ya no es válida. Pide a quien te invitó que genere otra.",
+    "accepted": "Esta invitación ya se ha usado.",
+    "notFound": "No encontramos esta invitación. Revisa que el enlace esté completo.",
+    "goToDashboard": "Ir al panel",
+    "signOutAndSwitch": "Cerrar sesión y entrar con otra cuenta"
+  },
+  "errors": {
+    "unexpected": "Algo ha fallado. Inténtalo de nuevo en unos minutos.",
+    "invalidCredentials": "El email o la contraseña no son correctos.",
+    "rateLimited": "Demasiados intentos. Espera unos minutos y vuelve a probar.",
+    "weakPassword": "Esa contraseña es demasiado débil. Elige otra más larga.",
+    "samePassword": "La contraseña nueva tiene que ser distinta de la actual.",
+    "reauthenticationNeeded": "Por seguridad, vuelve a iniciar sesión antes de cambiar la contraseña.",
+    "insufficientRole": "No tienes permiso para hacer esto.",
+    "lastOwner": "La organización necesita al menos un propietario. Nombra a otro propietario antes.",
+    "organizationLimit": "Has llegado al máximo de organizaciones propias.",
+    "alreadyMember": "Esa persona ya es miembro de la organización.",
+    "invitationLimit": "Hay demasiadas invitaciones pendientes. Anula alguna antes de crear otra.",
+    "invitationInvalid": "Esta invitación ya no es válida.",
+    "invitationExpired": "Esta invitación ha caducado.",
+    "invitationEmailMismatch": "Esta invitación es para otro email.",
+    "emailNotConfirmed": "Todavía no has confirmado tu email. Busca el mensaje que te enviamos al registrarte.",
+    "linkInvalid": "El enlace no es válido o ha caducado. Vuelve a intentarlo."
+  },
+  "validation": {
+    "required": "Este campo es obligatorio.",
+    "emailInvalid": "Escribe un email válido.",
+    "passwordTooShort": "Mínimo 12 caracteres.",
+    "passwordTooLong": "Máximo 72 caracteres.",
+    "passwordsDontMatch": "Las contraseñas no coinciden.",
+    "tooLong": "Máximo 100 caracteres.",
+    "roleInvalid": "Elige un rol."
+  }
+}

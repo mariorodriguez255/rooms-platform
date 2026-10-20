@@ -1,4 +1,5 @@
 import type { NextConfig } from "next";
+import createNextIntlPlugin from "next-intl/plugin";
 
 const nextConfig: NextConfig = {
   // Agent rules live in CLAUDE.md; don't let `next dev` write AGENTS.md.
@@ -15,4 +16,7 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default nextConfig;
+// Points next-intl at src/i18n/request.ts (its default location).
+const withNextIntl = createNextIntlPlugin();
+
+export default withNextIntl(nextConfig);

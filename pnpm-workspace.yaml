@@ -6,3 +6,7 @@ minimumReleaseAge: 4320
 allowBuilds:
   sharp: false
   unrs-resolver: false
+  # Pulled in by next-intl for its message extractor (not used). Both ship
+  # prebuilt binaries, so their install scripts are not needed.
+  "@parcel/watcher": false
+  "@swc/core": false
