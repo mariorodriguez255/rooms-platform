@@ -2,11 +2,13 @@ import "server-only";
 
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import type { SupabaseClient } from "@supabase/supabase-js";
 import { cache } from "react";
 
 import type { MemberRole } from "@/lib/auth/permissions";
-import { LOGIN_PATH } from "@/lib/auth/routes";
+import { HOME_PATH, LOGIN_PATH, safeNextPath } from "@/lib/auth/routes";
 import { createClient } from "@/lib/supabase/server";
+import type { Database } from "@/types/database";
 
 // Data Access Layer: the only place that reads the session. Pages and
 // Server Actions call these functions instead of reading cookies directly.
@@ -89,4 +91,29 @@ export async function setActiveOrganization(orgId: string): Promise<void> {
     path: "/",
     maxAge: 60 * 60 * 24 * 365,
   });
+}
+
+// Where to send a signed-in user: the dashboard, or onboarding while they
+// have no organization. Deciding it here avoids a redirect from inside a
+// page's Suspense boundary (which the browser would have to perform).
+// Not cached: it runs right after changes made in the same request (sign
+// in, leaving an organization), with the client that made them.
+export async function homePath(
+  supabase: SupabaseClient<Database>,
+): Promise<string> {
+  // RLS only shows members of the user's own organizations.
+  const { count, error } = await supabase
+    .from("members")
+    .select("id", { count: "exact", head: true });
+  if (error) throw error;
+  return count ? HOME_PATH : ONBOARDING_PATH;
+}
+
+// ?next= after signing in: a safe same-site path, or the user's home.
+export async function destinationAfterSignIn(
+  supabase: SupabaseClient<Database>,
+  next: unknown,
+): Promise<string> {
+  const target = safeNextPath(next);
+  return target === HOME_PATH ? homePath(supabase) : target;
 }

@@ -2,8 +2,12 @@
 
 import { redirect } from "next/navigation";
 
-import { HOME_PATH, authConfirmUrl, safeNextPath } from "@/lib/auth/routes";
-import { requireUser } from "@/lib/auth/session";
+import { authConfirmUrl } from "@/lib/auth/routes";
+import {
+  destinationAfterSignIn,
+  homePath,
+  requireUser,
+} from "@/lib/auth/session";
 import { errorKeyFrom } from "@/lib/errors";
 import { getRequestOrigin } from "@/lib/request-origin";
 import { createClient } from "@/lib/supabase/server";
@@ -49,7 +53,7 @@ export async function signIn(
     };
   }
 
-  redirect(safeNextPath(values.next));
+  redirect(await destinationAfterSignIn(supabase, values.next));
 }
 
 const RESEND_FIELDS = ["email", "next"] as const;
@@ -176,5 +180,5 @@ export async function resetPassword(
   if (error) {
     return { status: "error", error: errorKeyFrom(error) };
   }
-  redirect(HOME_PATH);
+  redirect(await homePath(supabase));
 }

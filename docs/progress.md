@@ -102,6 +102,8 @@ Decisiones (además de los ADR):
 - **`Suspense` explícito dentro de cada página** en vez de `loading.tsx`: la validación de navegación instantánea de Next no acepta `loading.tsx` con Partial Prefetching.
 - **`connection()` en `createClient()`**: el cliente de Supabase usa la hora actual (caducidad del token), que Cache Components no permite al prerenderizar.
 - **Cabecera y lista de miembros adaptadas al móvil**: los e2e en móvil detectaron que la navegación tapaba el menú.
+- **Plantillas de email por defecto** mientras no haya SMTP propio: el primer `config push` falló porque el plan Free no admite plantillas propias con el SMTP incluido. `/auth/confirm` acepta ahora también el `?code=` de PKCE.
+- **Ajustes de la nube** en `[remotes.cloud]`: URLs de Auth restringidas a `/auth/confirm`, un email de Auth por minuto y códigos de 8 dígitos. El tamaño del pooler no se declara (lo fija Supabase según la máquina).
 - Falsos positivos del hook de secretos (claves de mensajes como `weakPassword` y contraseñas ficticias de los tests) marcados con `secret-scan:allow`.
 
 Pendiente para cerrar el hito:
@@ -109,12 +111,12 @@ Pendiente para cerrar el hito:
 - [x] Mario: crear el proyecto de Supabase en `eu-central-1` (ref `dnwzdrnleixdeamqtifa`). Sus URLs de Auth están en `[remotes.cloud]` de `supabase/config.toml`.
 - [ ] Configurar Auth en la nube (URL del sitio, URLs de redirección de Vercel, confirmación de email, 12 caracteres, plantillas) y aplicar la migración (`supabase link`, `config diff`/`config push`, `db push`). Lo ejecuta Mario porque pide su sesión y la contraseña de la BD.
 - [ ] Variables `NEXT_PUBLIC_SUPABASE_URL` y `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` en Vercel (no la clave secreta).
-- [ ] Probar en la vista previa: registro con el email de Mario (el SMTP incluido solo envía a miembros del equipo de Supabase), crear organización e invitar.
+- [ ] Probar en la vista previa: registro con el email de Mario (el SMTP incluido solo envía a miembros del equipo de Supabase; abrir el enlace en el mismo navegador), crear organización e invitar.
 - [ ] CI en verde en el PR y revisión de Mario.
 
 Pendiente para hitos posteriores:
 
-- **SMTP propio** (Resend o Postmark) antes de que se registre nadie que no sea del equipo: Hito 3.
+- **SMTP propio** (Resend o Postmark) antes de que se registre nadie que no sea del equipo: Hito 3. Con él se activan las plantillas de email en español (ahora salen las de Supabase, en inglés, y los enlaces solo funcionan en el mismo navegador: ver ADR 0004).
 - **Proxy fuera de la UE**: Vercel ejecuta `proxy.ts` en todas sus regiones (ver ADR 0003). Confirmar antes del piloto que la cookie de sesión está cubierta por el DPA de Vercel, o reducir lo que procesa el proxy.
 - Al pasar a Supabase Pro: comprobación de contraseñas filtradas. MFA más adelante.
 - Borrado de cuentas y organizaciones (y qué pasa si se borra el único owner): Hito 7.

@@ -10,15 +10,23 @@ import { SubmitButton } from "@/components/forms/submit-button";
 import { TextField } from "@/components/forms/text-field";
 import { Button } from "@/components/ui/button";
 import { FieldGroup } from "@/components/ui/field";
+import type { ErrorKey } from "@/lib/errors";
 import { initialFormState, type FormState } from "@/lib/validation/form";
 
 import { resendConfirmation, signIn, type SignInField } from "../actions";
+
+// ?error= values set by /auth/confirm. A Map, so that ?error=constructor
+// cannot match an inherited object property.
+const LINK_ERRORS = new Map<string, ErrorKey>([
+  ["link_invalid", "linkInvalid"],
+  ["link_other_browser", "linkOtherBrowser"],
+]);
 
 export function LoginForm() {
   const t = useTranslations();
   const searchParams = useSearchParams();
   const next = searchParams.get("next") ?? "";
-  const linkInvalid = searchParams.get("error") === "link_invalid";
+  const linkError = LINK_ERRORS.get(searchParams.get("error") ?? "");
 
   const [state, action] = useActionState(
     signIn,
@@ -36,8 +44,8 @@ export function LoginForm() {
 
   return (
     <div className="flex flex-col gap-6">
-      {linkInvalid && state.status === "idle" ? (
-        <FormError error="linkInvalid" />
+      {linkError && state.status === "idle" ? (
+        <FormError error={linkError} />
       ) : null}
 
       <form action={action} noValidate>

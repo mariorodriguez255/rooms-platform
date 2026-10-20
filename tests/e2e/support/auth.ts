@@ -24,6 +24,13 @@ function field(page: Page, label: string) {
   return page.getByLabel(label, { exact: true }).filter({ visible: true });
 }
 
+// Subjects of Supabase's default email templates (our Spanish templates come
+// with the custom SMTP, milestone 3).
+export const EMAIL_SUBJECTS = {
+  confirmation: "Confirm your email address",
+  recovery: "Reset your password",
+} as const;
+
 export function uniqueEmail(prefix: string): string {
   return `${prefix}-${Date.now()}-${Math.random().toString(36).slice(2, 8)}@example.com`;
 }
@@ -57,5 +64,5 @@ export async function signUpAndConfirm(
     .click();
   await expect(page.getByText("Revisa tu email")).toBeVisible();
 
-  await page.goto(await emailLink(email, "Confirma tu email"));
+  await page.goto(await emailLink(email, EMAIL_SUBJECTS.confirmation));
 }

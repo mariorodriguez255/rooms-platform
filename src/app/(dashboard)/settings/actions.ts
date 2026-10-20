@@ -4,8 +4,7 @@ import { refresh } from "next/cache";
 import { redirect } from "next/navigation";
 
 import type { ActionResult } from "@/components/actions/types";
-import { HOME_PATH } from "@/lib/auth/routes";
-import { getActiveMembership, requireUser } from "@/lib/auth/session";
+import { getActiveMembership, homePath, requireUser } from "@/lib/auth/session";
 import { errorKeyFrom } from "@/lib/errors";
 import { getRequestOrigin } from "@/lib/request-origin";
 import { createClient } from "@/lib/supabase/server";
@@ -177,8 +176,8 @@ export async function removeMember(memberId: string): Promise<ActionResult> {
   }
 
   if (data[0]?.user_id === user.id) {
-    // Left the organization: the dashboard picks another one or onboarding.
-    redirect(HOME_PATH);
+    // Left the organization: on to another one, or to onboarding.
+    redirect(await homePath(supabase));
   }
   refresh();
   return { status: "success" };

@@ -1,6 +1,8 @@
 # Plantillas de email de Supabase Auth
 
-Plantillas en español de los emails que envía Supabase Auth. En local se cargan desde `supabase/config.toml`; en el proyecto en la nube se configuran igual (ver «Supabase en la nube» en el README principal).
+Plantillas en español de los emails que envía Supabase Auth.
+
+> **Desactivadas hasta tener SMTP propio (Hito 3).** El plan Free de Supabase rechaza cambios de plantilla mientras se use su servidor de correo, y local debe comportarse igual que la nube. Mientras tanto se usan las plantillas por defecto (en inglés) y `/auth/confirm` recibe un `?code=` (ver ADR 0004). Para activarlas: descomentar los bloques `[auth.email.template.*]` de `supabase/config.toml` y hacer `supabase config push`.
 
 ## Cómo se construye el enlace
 
