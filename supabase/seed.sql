@@ -1,0 +1,2 @@
+-- Local development seed data. Loaded by `pnpm db:reset`.
+-- Always fictitious data: never real people, emails or addresses.
