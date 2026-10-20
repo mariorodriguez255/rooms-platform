@@ -4,16 +4,16 @@ Estado de los hitos de la sección 13 del briefing. Se actualiza al terminar cad
 
 Leyenda: ⬜ pendiente · 🟡 en curso · ✅ hecho
 
-| Hito                                 | Estado                           | Hecho cuando                                                                       |
-| ------------------------------------ | -------------------------------- | ---------------------------------------------------------------------------------- |
-| 0 — Cimientos                        | ✅ Hecho (2026-10-20, PR #1)     | El proyecto arranca en local, los tests pasan y hay un despliegue de vista previa  |
-| 1 — Cuentas y organizaciones         | 🟡 En curso (rama `feat/hito-1`) | Dos organizaciones de prueba no pueden ver datos la una de la otra                 |
-| 2 — Pisos y habitaciones             | ⬜ Pendiente                     | El operador ve el estado de todas sus habitaciones en una pantalla                 |
-| 3 — Formulario del candidato         | ⬜ Pendiente                     | Un candidato puede postularse desde el móvil sin registrarse                       |
-| 4 — Puntuación y pipeline            | ⬜ Pendiente                     | El operador ve un ranking explicado y puede aceptar a un candidato                 |
-| 5 — Bandeja de leads por email       | ⬜ Pendiente                     | Un aviso reenviado de idealista crea un lead y envía el formulario automáticamente |
-| 6 — Paquete de anuncio               | ⬜ Pendiente                     | Publicar una habitación en tres portales lleva menos de cinco minutos              |
-| 7 — Facturación y lanzamiento piloto | ⬜ Pendiente                     | Un operador piloto puede pagar y usar la plataforma de forma autónoma              |
+| Hito                                 | Estado                       | Hecho cuando                                                                       |
+| ------------------------------------ | ---------------------------- | ---------------------------------------------------------------------------------- |
+| 0 — Cimientos                        | ✅ Hecho (2026-10-20, PR #1) | El proyecto arranca en local, los tests pasan y hay un despliegue de vista previa  |
+| 1 — Cuentas y organizaciones         | ✅ Hecho (2026-10-20, PR #6) | Dos organizaciones de prueba no pueden ver datos la una de la otra                 |
+| 2 — Pisos y habitaciones             | ⬜ Pendiente                 | El operador ve el estado de todas sus habitaciones en una pantalla                 |
+| 3 — Formulario del candidato         | ⬜ Pendiente                 | Un candidato puede postularse desde el móvil sin registrarse                       |
+| 4 — Puntuación y pipeline            | ⬜ Pendiente                 | El operador ve un ranking explicado y puede aceptar a un candidato                 |
+| 5 — Bandeja de leads por email       | ⬜ Pendiente                 | Un aviso reenviado de idealista crea un lead y envía el formulario automáticamente |
+| 6 — Paquete de anuncio               | ⬜ Pendiente                 | Publicar una habitación en tres portales lleva menos de cinco minutos              |
+| 7 — Facturación y lanzamiento piloto | ⬜ Pendiente                 | Un operador piloto puede pagar y usar la plataforma de forma autónoma              |
 
 ## Registro
 
@@ -106,14 +106,16 @@ Decisiones (además de los ADR):
 - **Ajustes de la nube** en `[remotes.cloud]`: URLs de Auth restringidas a `/auth/confirm`, un email de Auth por minuto y códigos de 8 dígitos. El tamaño del pooler no se declara (lo fija Supabase según la máquina).
 - Falsos positivos del hook de secretos (claves de mensajes como `weakPassword` y contraseñas ficticias de los tests) marcados con `secret-scan:allow`.
 
-Pendiente para cerrar el hito:
+Cierre del hito:
 
 - [x] Mario: crear el proyecto de Supabase en `eu-central-1` (ref `dnwzdrnleixdeamqtifa`). Sus URLs de Auth están en `[remotes.cloud]` de `supabase/config.toml`.
 - [x] Auth configurado en la nube con `supabase config push` (URLs, confirmación de email, 12 caracteres, `secure_password_change`, sin MFA por ahora) y migración aplicada con `supabase db push` (comprobado con `migration list`).
 - [x] Tests de pgTAP contra la nube (`supabase test db --linked`): todos los de aislamiento en verde a la primera. El de invariantes detectó `public.rls_auto_enable()`, una función de _event trigger_ que crea Supabase en la nube (activa RLS en tablas nuevas, por el nombre); como no se puede invocar, el invariante ahora excluye las funciones de trigger. Tras el ajuste, 95/95 en la nube. Nota: el CLI deja instalada la extensión `pgtap` en la nube (inofensiva, esquema no expuesto).
-- [ ] Variables `NEXT_PUBLIC_SUPABASE_URL` y `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` en Vercel (no la clave secreta).
-- [ ] Probar en la vista previa: registro con el email de Mario (el SMTP incluido solo envía a miembros del equipo de Supabase; abrir el enlace en el mismo navegador), crear organización e invitar.
-- [ ] CI en verde en el PR y revisión de Mario.
+- [x] Variables `NEXT_PUBLIC_SUPABASE_URL` y `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` en Vercel, de tipo _Config_ (son públicas por diseño), en Production y Preview. La clave secreta no está en Vercel.
+- [x] Probado por Mario en la vista previa: registro con confirmación de email, creación de organización e invitación aceptada desde otro dispositivo con una segunda cuenta.
+  - La segunda cuenta se creó desde el panel de Supabase con _Auto Confirm User_, porque el SMTP incluido solo envía a los miembros del equipo.
+  - Para abrir la vista previa en otro dispositivo hizo falta un _Sharable Link_ de Vercel: las vistas previas están protegidas con Vercel Authentication y la producción no.
+- [x] CI en verde en el PR #6 (formato, lint, tipos, unitarios, pgTAP, integración, e2e, build y gitleaks) y revisión de Mario.
 
 Pendiente para hitos posteriores:
 
