@@ -77,19 +77,24 @@ select is_empty(
   'anon has no privileges on any table or view in public'
 );
 
--- Functions that belong to an extension are not ours to restrict.
+-- Only functions that can be called (through the API or SQL) matter:
+-- - trigger and event trigger functions cannot be called directly, whatever
+--   their privileges (e.g. public.rls_auto_enable(), which the hosted
+--   project creates to enable RLS on new tables);
+-- - functions that belong to an extension are not ours to restrict.
 select is_empty(
   $$
     select p.oid::regprocedure::text
     from pg_proc p
     where p.pronamespace in ('public'::regnamespace, 'private'::regnamespace)
+      and p.prorettype not in ('trigger'::regtype, 'event_trigger'::regtype)
       and has_function_privilege('anon', p.oid, 'execute')
       and not exists (
         select 1 from pg_depend d
         where d.classid = 'pg_proc'::regclass and d.objid = p.oid and d.deptype = 'e'
       )
   $$,
-  'anon cannot execute any of our functions'
+  'anon cannot execute any of our callable functions'
 );
 
 -- Without a fixed search_path, a security definer function can be tricked
