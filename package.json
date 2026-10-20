@@ -18,7 +18,7 @@
     "db:stop": "supabase stop",
     "db:status": "supabase status",
     "db:reset": "supabase db reset",
-    "db:types": "supabase gen types typescript --local > src/types/database.ts",
+    "db:types": "supabase gen types typescript --local > src/types/database.ts && prettier --write src/types/database.ts",
     "prepare": "git rev-parse --git-dir >/dev/null 2>&1 && git config core.hooksPath .githooks || true"
   },
   "dependencies": {
