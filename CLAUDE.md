@@ -22,20 +22,20 @@ No es: un portal, un gestor vacacional por noches, un «todo en uno» inmobiliar
 
 ## Stack técnico
 
-| Capa | Tecnología |
-| --- | --- |
-| Frontend | Next.js (App Router) + TypeScript + Tailwind CSS + shadcn/ui |
-| Backend y BD | Supabase (Postgres, Auth, Storage, Edge Functions), región UE |
-| Acceso a datos | Cliente de Supabase con tipos generados + validación con Zod |
-| Tareas programadas | pg_cron de Supabase; Trigger.dev o Inngest si crece |
-| Email saliente | Resend o Postmark |
-| Email entrante | Postmark Inbound (o equivalente) → webhook |
-| IA | API de Claude con salida JSON validada (extraer datos de emails, resumir candidatos) |
-| PDF (V2) | Plantillas HTML → PDF (Puppeteer o Gotenberg) |
-| Suscripción | Stripe Billing, cantidad = nº de habitaciones activas |
-| Calidad | Vitest, Playwright, ESLint, Prettier |
-| Observabilidad | Sentry + PostHog (alojado en la UE) |
-| Hosting | Vercel con funciones en región UE |
+| Capa               | Tecnología                                                                           |
+| ------------------ | ------------------------------------------------------------------------------------ |
+| Frontend           | Next.js (App Router) + TypeScript + Tailwind CSS + shadcn/ui                         |
+| Backend y BD       | Supabase (Postgres, Auth, Storage, Edge Functions), región UE                        |
+| Acceso a datos     | Cliente de Supabase con tipos generados + validación con Zod                         |
+| Tareas programadas | pg_cron de Supabase; Trigger.dev o Inngest si crece                                  |
+| Email saliente     | Resend o Postmark                                                                    |
+| Email entrante     | Postmark Inbound (o equivalente) → webhook                                           |
+| IA                 | API de Claude con salida JSON validada (extraer datos de emails, resumir candidatos) |
+| PDF (V2)           | Plantillas HTML → PDF (Puppeteer o Gotenberg)                                        |
+| Suscripción        | Stripe Billing, cantidad = nº de habitaciones activas                                |
+| Calidad            | Vitest, Playwright, ESLint, Prettier                                                 |
+| Observabilidad     | Sentry + PostHog (alojado en la UE)                                                  |
+| Hosting            | Vercel con funciones en región UE                                                    |
 
 ### Invariantes de arquitectura
 

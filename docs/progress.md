@@ -4,16 +4,16 @@ Estado de los hitos de la sección 13 del briefing. Se actualiza al terminar cad
 
 Leyenda: ⬜ pendiente · 🟡 en curso · ✅ hecho
 
-| Hito | Estado | Hecho cuando |
-| --- | --- | --- |
-| 0 — Cimientos | ⬜ Pendiente (preparación hecha, plan sin presentar) | El proyecto arranca en local, los tests pasan y hay un despliegue de vista previa |
-| 1 — Cuentas y organizaciones | ⬜ Pendiente | Dos organizaciones de prueba no pueden ver datos la una de la otra |
-| 2 — Pisos y habitaciones | ⬜ Pendiente | El operador ve el estado de todas sus habitaciones en una pantalla |
-| 3 — Formulario del candidato | ⬜ Pendiente | Un candidato puede postularse desde el móvil sin registrarse |
-| 4 — Puntuación y pipeline | ⬜ Pendiente | El operador ve un ranking explicado y puede aceptar a un candidato |
-| 5 — Bandeja de leads por email | ⬜ Pendiente | Un aviso reenviado de idealista crea un lead y envía el formulario automáticamente |
-| 6 — Paquete de anuncio | ⬜ Pendiente | Publicar una habitación en tres portales lleva menos de cinco minutos |
-| 7 — Facturación y lanzamiento piloto | ⬜ Pendiente | Un operador piloto puede pagar y usar la plataforma de forma autónoma |
+| Hito                                 | Estado                                               | Hecho cuando                                                                       |
+| ------------------------------------ | ---------------------------------------------------- | ---------------------------------------------------------------------------------- |
+| 0 — Cimientos                        | ⬜ Pendiente (preparación hecha, plan sin presentar) | El proyecto arranca en local, los tests pasan y hay un despliegue de vista previa  |
+| 1 — Cuentas y organizaciones         | ⬜ Pendiente                                         | Dos organizaciones de prueba no pueden ver datos la una de la otra                 |
+| 2 — Pisos y habitaciones             | ⬜ Pendiente                                         | El operador ve el estado de todas sus habitaciones en una pantalla                 |
+| 3 — Formulario del candidato         | ⬜ Pendiente                                         | Un candidato puede postularse desde el móvil sin registrarse                       |
+| 4 — Puntuación y pipeline            | ⬜ Pendiente                                         | El operador ve un ranking explicado y puede aceptar a un candidato                 |
+| 5 — Bandeja de leads por email       | ⬜ Pendiente                                         | Un aviso reenviado de idealista crea un lead y envía el formulario automáticamente |
+| 6 — Paquete de anuncio               | ⬜ Pendiente                                         | Publicar una habitación en tres portales lleva menos de cinco minutos              |
+| 7 — Facturación y lanzamiento piloto | ⬜ Pendiente                                         | Un operador piloto puede pagar y usar la plataforma de forma autónoma              |
 
 ## Registro
 
@@ -47,24 +47,24 @@ Hecho:
 ## Antes de subir a GitHub (checklist)
 
 - [ ] Crear el repo en GitHub **vacío** (sin README, licencia ni `.gitignore`: ya los tenemos o vendrán en el Hito 0).
-- [ ] En *Settings → Code security*, comprobar que estén activos **Secret scanning** y **Push protection** (GitHub bloquea en el servidor los pushes con claves conocidas). Activar también **Dependabot alerts**.
+- [ ] En _Settings → Code security_, comprobar que estén activos **Secret scanning** y **Push protection** (GitHub bloquea en el servidor los pushes con claves conocidas). Activar también **Dependabot alerts**.
 - [ ] Revisar `git log --format='%an <%ae>'` y confirmar que el autor es el correcto.
-- [ ] Si en GitHub tienes activado «Block command line pushes that expose my email» (*Settings → Emails*), el push se rechazará: desactívalo o pasa a usar el email noreply.
+- [ ] Si en GitHub tienes activado «Block command line pushes that expose my email» (_Settings → Emails_), el push se rechazará: desactívalo o pasa a usar el email noreply.
 - [ ] Elegir licencia (o ninguna: sin licencia, el código es visible pero nadie tiene permiso legal para reutilizarlo).
 
 ## Notas para el Hito 0
 
 Entorno de desarrollo comprobado el 2026-10-20:
 
-| Herramienta | Estado |
-| --- | --- |
-| git | ✅ 2.50.1 |
-| Node.js | ✅ v24.22.0 |
-| npm / npx | ✅ 11.19.1 |
-| pnpm | ❌ no instalado (decidir gestor de paquetes en el plan) |
-| Supabase CLI | ❌ no instalado |
+| Herramienta                       | Estado                                                          |
+| --------------------------------- | --------------------------------------------------------------- |
+| git                               | ✅ 2.50.1                                                       |
+| Node.js                           | ✅ v24.22.0                                                     |
+| npm / npx                         | ✅ 11.19.1                                                      |
+| pnpm                              | ❌ no instalado (decidir gestor de paquetes en el plan)         |
+| Supabase CLI                      | ❌ no instalado                                                 |
 | Docker (o alternativa compatible) | ❌ no instalado — **necesario para levantar Supabase en local** |
-| GitHub CLI (`gh`) | ❌ no instalado (útil para la CI y los PR, no imprescindible) |
+| GitHub CLI (`gh`)                 | ❌ no instalado (útil para la CI y los PR, no imprescindible)   |
 
 Otros puntos a resolver en el plan:
 

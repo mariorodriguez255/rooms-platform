@@ -4,7 +4,7 @@ export default function Home() {
   return (
     <main className="flex min-h-screen flex-col items-center justify-center gap-4 p-6 text-center">
       <h1 className="text-3xl font-semibold">rooms-platform</h1>
-      <p className="text-muted-foreground max-w-md">
+      <p className="max-w-md text-muted-foreground">
         Sigue publicando en idealista, Badi o Airbnb; todo lo que pasa después
         lo gestionas aquí.
       </p>
