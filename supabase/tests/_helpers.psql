@@ -1,0 +1,147 @@
+-- Test helpers, included at the top of every test file with `\ir _helpers.psql`
+-- right after `begin;`. They live in a `tests` schema created inside the
+-- test transaction, so the final rollback removes them: they never reach a
+-- migration or the hosted database.
+
+create extension if not exists pgtap with schema extensions;
+
+create schema tests;
+grant usage on schema tests to anon, authenticated;
+
+-- Creates a confirmed user (the signup trigger also creates its profile).
+create function tests.create_user(user_email text, user_name text default null)
+returns uuid
+language plpgsql
+as $$
+declare
+  new_id uuid := gen_random_uuid();
+begin
+  insert into auth.users (id, aud, role, email, email_confirmed_at, raw_user_meta_data)
+  values (
+    new_id,
+    'authenticated',
+    'authenticated',
+    user_email,
+    now(),
+    jsonb_build_object('full_name', coalesce(user_name, split_part(user_email, '@', 1)))
+  );
+  return new_id;
+end;
+$$;
+
+-- Lookups are security definer so they work while acting as anon or as a
+-- user who cannot see the row. (The role-switching helpers below cannot be:
+-- Postgres forbids changing role inside a security definer function.)
+create function tests.user_id(user_email text)
+returns uuid
+language sql
+stable
+security definer
+set search_path = ''
+as $$
+  select id from auth.users where email = user_email;
+$$;
+
+-- Creates an organization owned by `owner_email` and returns its id.
+create function tests.create_org(org_name text, owner_email text)
+returns uuid
+language plpgsql
+as $$
+declare
+  new_org uuid;
+begin
+  insert into public.organizations (name) values (org_name) returning id into new_org;
+  insert into public.members (org_id, user_id, role)
+  values (new_org, tests.user_id(owner_email), 'owner');
+  return new_org;
+end;
+$$;
+
+create function tests.add_member(target_org uuid, member_email text, member_role public.member_role)
+returns void
+language sql
+as $$
+  insert into public.members (org_id, user_id, role)
+  values (target_org, tests.user_id(member_email), member_role);
+$$;
+
+create function tests.org_id(org_name text)
+returns uuid
+language sql
+stable
+security definer
+set search_path = ''
+as $$
+  select id from public.organizations where name = org_name;
+$$;
+
+-- The fixture shared by the tests: two organizations that must never see
+-- each other's data. Emails use example.org so they never collide with the
+-- development seed (example.com): tests must not depend on it.
+--   Org A: ana (owner), diego (admin), bruno (staff)
+--   Org B: carla (owner)
+--   frank: signed up, no organization
+create function tests.two_orgs()
+returns void
+language plpgsql
+as $$
+begin
+  perform tests.create_user('ana@example.org', 'Ana Owner');
+  perform tests.create_user('diego@example.org', 'Diego Admin');
+  perform tests.create_user('bruno@example.org', 'Bruno Staff');
+  perform tests.create_user('carla@example.org', 'Carla Other');
+  perform tests.create_user('frank@example.org', 'Frank Alone');
+
+  perform tests.create_org('Org A', 'ana@example.org');
+  perform tests.add_member(tests.org_id('Org A'), 'diego@example.org', 'admin');
+  perform tests.add_member(tests.org_id('Org A'), 'bruno@example.org', 'staff');
+
+  perform tests.create_org('Org B', 'carla@example.org');
+end;
+$$;
+
+-- Acts as a signed-in user for the rest of the transaction, the same way
+-- PostgREST does: role `authenticated` plus the JWT claims.
+create function tests.authenticate_as(user_email text)
+returns void
+language plpgsql
+as $$
+declare
+  uid uuid := tests.user_id(user_email);
+begin
+  if uid is null then
+    raise exception 'tests.authenticate_as: unknown user %', user_email;
+  end if;
+  perform set_config('role', 'authenticated', true);
+  perform set_config(
+    'request.jwt.claims',
+    json_build_object('sub', uid, 'role', 'authenticated', 'email', user_email)::text,
+    true
+  );
+end;
+$$;
+
+-- Acts as a visitor without a session.
+create function tests.authenticate_as_anon()
+returns void
+language plpgsql
+as $$
+begin
+  perform set_config('role', 'anon', true);
+  perform set_config('request.jwt.claims', json_build_object('role', 'anon')::text, true);
+end;
+$$;
+
+-- Back to the test runner's own role (postgres), e.g. to inspect rows that
+-- the user under test cannot see.
+create function tests.as_admin()
+returns void
+language plpgsql
+as $$
+begin
+  perform set_config('role', 'postgres', true);
+  perform set_config('request.jwt.claims', '', true);
+end;
+$$;
+
+grant execute on all functions in schema tests to anon, authenticated;

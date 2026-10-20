@@ -34,16 +34,168 @@ export type Database = {
   };
   public: {
     Tables: {
-      [_ in never]: never;
+      invitations: {
+        Row: {
+          accepted_at: string | null;
+          accepted_by: string | null;
+          created_at: string;
+          email: string;
+          expires_at: string;
+          id: string;
+          invited_by: string | null;
+          org_id: string;
+          revoked_at: string | null;
+          role: Database["public"]["Enums"]["member_role"];
+          token_hash: string;
+        };
+        ComputedFields: never;
+        Insert: {
+          accepted_at?: string | null;
+          accepted_by?: string | null;
+          created_at?: string;
+          email: string;
+          expires_at?: string;
+          id?: string;
+          invited_by?: string | null;
+          org_id: string;
+          revoked_at?: string | null;
+          role: Database["public"]["Enums"]["member_role"];
+          token_hash: string;
+        };
+        Update: {
+          accepted_at?: string | null;
+          accepted_by?: string | null;
+          created_at?: string;
+          email?: string;
+          expires_at?: string;
+          id?: string;
+          invited_by?: string | null;
+          org_id?: string;
+          revoked_at?: string | null;
+          role?: Database["public"]["Enums"]["member_role"];
+          token_hash?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "invitations_org_id_fkey";
+            columns: ["org_id"];
+            isOneToOne: false;
+            referencedRelation: "organizations";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      members: {
+        Row: {
+          created_at: string;
+          id: string;
+          org_id: string;
+          role: Database["public"]["Enums"]["member_role"];
+          user_id: string;
+        };
+        ComputedFields: never;
+        Insert: {
+          created_at?: string;
+          id?: string;
+          org_id: string;
+          role: Database["public"]["Enums"]["member_role"];
+          user_id: string;
+        };
+        Update: {
+          created_at?: string;
+          id?: string;
+          org_id?: string;
+          role?: Database["public"]["Enums"]["member_role"];
+          user_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "members_org_id_fkey";
+            columns: ["org_id"];
+            isOneToOne: false;
+            referencedRelation: "organizations";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "members_user_id_fkey";
+            columns: ["user_id"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["user_id"];
+          },
+        ];
+      };
+      organizations: {
+        Row: {
+          created_at: string;
+          id: string;
+          name: string;
+        };
+        ComputedFields: never;
+        Insert: {
+          created_at?: string;
+          id?: string;
+          name: string;
+        };
+        Update: {
+          created_at?: string;
+          id?: string;
+          name?: string;
+        };
+        Relationships: [];
+      };
+      profiles: {
+        Row: {
+          created_at: string;
+          email: string | null;
+          full_name: string | null;
+          user_id: string;
+        };
+        ComputedFields: never;
+        Insert: {
+          created_at?: string;
+          email?: string | null;
+          full_name?: string | null;
+          user_id: string;
+        };
+        Update: {
+          created_at?: string;
+          email?: string | null;
+          full_name?: string | null;
+          user_id?: string;
+        };
+        Relationships: [];
+      };
     };
     Views: {
       [_ in never]: never;
     };
     Functions: {
-      [_ in never]: never;
+      accept_invitation: {
+        Args: { invitation_token: string };
+        Returns: string;
+      };
+      create_invitation: {
+        Args: {
+          invitee_email: string;
+          invitee_role: Database["public"]["Enums"]["member_role"];
+          target_org: string;
+        };
+        Returns: string;
+      };
+      create_organization: { Args: { org_name: string }; Returns: string };
+      get_invitation: {
+        Args: { invitation_token: string };
+        Returns: {
+          email_matches: boolean;
+          org_name: string;
+          role: Database["public"]["Enums"]["member_role"];
+          status: string;
+        }[];
+      };
     };
     Enums: {
-      [_ in never]: never;
+      member_role: "owner" | "admin" | "staff";
     };
     CompositeTypes: {
       [_ in never]: never;
@@ -173,6 +325,8 @@ export const Constants = {
     Enums: {},
   },
   public: {
-    Enums: {},
+    Enums: {
+      member_role: ["owner", "admin", "staff"],
+    },
   },
 } as const;
