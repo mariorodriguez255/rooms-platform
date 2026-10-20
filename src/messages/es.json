@@ -87,15 +87,13 @@
     "members": {
       "title": "Miembros",
       "description": "Las personas que trabajan en {organization}.",
-      "name": "Nombre",
-      "email": "Email",
-      "role": "Rol",
       "you": "(tú)",
       "changeRole": "Cambiar el rol de {name}",
       "remove": "Quitar",
       "removeTitle": "¿Quitar a {name}?",
       "removeDescription": "Dejará de tener acceso a {organization}. Podrás volver a invitarle cuando quieras.",
       "leave": "Salir de la organización",
+      "leaveShort": "Salir",
       "leaveTitle": "¿Salir de {organization}?",
       "leaveDescription": "Perderás el acceso. Para volver, alguien tendrá que invitarte de nuevo.",
       "rolesHelp": "Equipo: trabajo diario. Administrador: además, gestiona miembros y datos de la organización. Propietario: además, gestiona propietarios y facturación."

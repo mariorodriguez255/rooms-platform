@@ -22,7 +22,7 @@ export async function AppHeader() {
       {active ? (
         <nav
           aria-label={active.orgName}
-          className="flex items-center gap-4 text-sm"
+          className="order-3 flex w-full items-center gap-4 text-sm sm:order-2 sm:w-auto"
         >
           <Link
             href="/dashboard"
@@ -44,7 +44,7 @@ export async function AppHeader() {
           </Link>
         </nav>
       ) : null}
-      <div className="ml-auto">
+      <div className="order-2 ml-auto sm:order-3">
         <UserMenu
           email={user.email}
           memberships={memberships}

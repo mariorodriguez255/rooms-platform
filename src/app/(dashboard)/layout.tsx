@@ -10,13 +10,14 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
   return (
     <div className="flex min-h-screen flex-col">
       <header className="border-b">
-        <div className="mx-auto flex h-14 w-full max-w-5xl items-center gap-4 px-4">
-          <Link href="/dashboard" className="font-semibold">
+        {/* Phones: logo and menu on one row, navigation below. */}
+        <div className="mx-auto flex w-full max-w-5xl flex-wrap items-center gap-x-6 gap-y-2 px-4 py-3">
+          <Link href="/dashboard" className="order-1 font-semibold">
             rooms-platform
           </Link>
           <Suspense
             fallback={
-              <div className="ml-auto h-8 w-40 animate-pulse rounded-md bg-muted" />
+              <div className="order-2 ml-auto h-8 w-40 animate-pulse rounded-md bg-muted" />
             }
           >
             <AppHeader />

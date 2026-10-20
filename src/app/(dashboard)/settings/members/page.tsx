@@ -13,14 +13,6 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import {
   assignableRoles,
   canManageMembers,
   canRemoveMember,
@@ -94,78 +86,69 @@ async function Members() {
           </CardDescription>
         </CardHeader>
         <CardContent className="flex flex-col gap-4">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>{t("settings.members.name")}</TableHead>
-                <TableHead>{t("settings.members.email")}</TableHead>
-                <TableHead>{t("settings.members.role")}</TableHead>
-                <TableHead>
-                  <span className="sr-only">
-                    {t("settings.members.remove")}
-                  </span>
-                </TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {members.map((member) => {
-                const isSelf = member.user_id === user.id;
-                const name =
-                  member.profiles.full_name ?? member.profiles.email ?? "—";
-                const roles = assignableRoles(active.role, member.role);
-                return (
-                  <TableRow key={member.id}>
-                    <TableCell className="font-medium">
+          <ul className="flex flex-col divide-y">
+            {members.map((member) => {
+              const isSelf = member.user_id === user.id;
+              const name =
+                member.profiles.full_name ?? member.profiles.email ?? "—";
+              const roles = assignableRoles(active.role, member.role);
+              return (
+                <li
+                  key={member.id}
+                  className="flex flex-wrap items-center gap-x-4 gap-y-2 py-3"
+                >
+                  <div className="flex min-w-0 flex-1 basis-56 flex-col">
+                    <span className="font-medium">
                       {name}{" "}
                       {isSelf ? (
-                        <span className="text-muted-foreground">
+                        <span className="font-normal text-muted-foreground">
                           {t("settings.members.you")}
                         </span>
                       ) : null}
-                    </TableCell>
-                    <TableCell>{member.profiles.email}</TableCell>
-                    <TableCell>
-                      {roles.length > 0 ? (
-                        <RoleSelect
-                          memberId={member.id}
-                          role={member.role}
-                          options={roles}
-                          label={t("settings.members.changeRole", { name })}
-                        />
-                      ) : (
-                        <Badge variant="secondary">
-                          {t(`roles.${member.role}`)}
-                        </Badge>
-                      )}
-                    </TableCell>
-                    <TableCell className="text-right">
-                      {isSelf ? (
-                        <ConfirmActionDialog
-                          triggerLabel={t("settings.members.leave")}
-                          title={t("settings.members.leaveTitle", {
-                            organization: active.orgName,
-                          })}
-                          description={t("settings.members.leaveDescription")}
-                          confirmLabel={t("settings.members.leave")}
-                          action={removeMember.bind(null, member.id)}
-                        />
-                      ) : canRemoveMember(active.role, member.role) ? (
-                        <ConfirmActionDialog
-                          triggerLabel={t("settings.members.remove")}
-                          title={t("settings.members.removeTitle", { name })}
-                          description={t("settings.members.removeDescription", {
-                            organization: active.orgName,
-                          })}
-                          confirmLabel={t("settings.members.remove")}
-                          action={removeMember.bind(null, member.id)}
-                        />
-                      ) : null}
-                    </TableCell>
-                  </TableRow>
-                );
-              })}
-            </TableBody>
-          </Table>
+                    </span>
+                    <span className="truncate text-sm text-muted-foreground">
+                      {member.profiles.email}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    {roles.length > 0 ? (
+                      <RoleSelect
+                        memberId={member.id}
+                        role={member.role}
+                        options={roles}
+                        label={t("settings.members.changeRole", { name })}
+                      />
+                    ) : (
+                      <Badge variant="secondary">
+                        {t(`roles.${member.role}`)}
+                      </Badge>
+                    )}
+                    {isSelf ? (
+                      <ConfirmActionDialog
+                        triggerLabel={t("settings.members.leaveShort")}
+                        title={t("settings.members.leaveTitle", {
+                          organization: active.orgName,
+                        })}
+                        description={t("settings.members.leaveDescription")}
+                        confirmLabel={t("settings.members.leave")}
+                        action={removeMember.bind(null, member.id)}
+                      />
+                    ) : canRemoveMember(active.role, member.role) ? (
+                      <ConfirmActionDialog
+                        triggerLabel={t("settings.members.remove")}
+                        title={t("settings.members.removeTitle", { name })}
+                        description={t("settings.members.removeDescription", {
+                          organization: active.orgName,
+                        })}
+                        confirmLabel={t("settings.members.remove")}
+                        action={removeMember.bind(null, member.id)}
+                      />
+                    ) : null}
+                  </div>
+                </li>
+              );
+            })}
+          </ul>
           <p className="text-sm text-muted-foreground">
             {t("settings.members.rolesHelp")}
           </p>

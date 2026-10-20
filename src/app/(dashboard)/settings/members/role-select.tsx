@@ -50,7 +50,7 @@ export function RoleSelect({
         defaultValue={role}
         disabled={pending}
         onChange={(event) => change(event.target.value)}
-        className="w-40"
+        className="w-36"
       >
         {options.map((option) => (
           <NativeSelectOption key={option} value={option}>
