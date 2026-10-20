@@ -4,16 +4,16 @@ Estado de los hitos de la sección 13 del briefing. Se actualiza al terminar cad
 
 Leyenda: ⬜ pendiente · 🟡 en curso · ✅ hecho
 
-| Hito                                 | Estado                                               | Hecho cuando                                                                       |
-| ------------------------------------ | ---------------------------------------------------- | ---------------------------------------------------------------------------------- |
-| 0 — Cimientos                        | ⬜ Pendiente (preparación hecha, plan sin presentar) | El proyecto arranca en local, los tests pasan y hay un despliegue de vista previa  |
-| 1 — Cuentas y organizaciones         | ⬜ Pendiente                                         | Dos organizaciones de prueba no pueden ver datos la una de la otra                 |
-| 2 — Pisos y habitaciones             | ⬜ Pendiente                                         | El operador ve el estado de todas sus habitaciones en una pantalla                 |
-| 3 — Formulario del candidato         | ⬜ Pendiente                                         | Un candidato puede postularse desde el móvil sin registrarse                       |
-| 4 — Puntuación y pipeline            | ⬜ Pendiente                                         | El operador ve un ranking explicado y puede aceptar a un candidato                 |
-| 5 — Bandeja de leads por email       | ⬜ Pendiente                                         | Un aviso reenviado de idealista crea un lead y envía el formulario automáticamente |
-| 6 — Paquete de anuncio               | ⬜ Pendiente                                         | Publicar una habitación en tres portales lleva menos de cinco minutos              |
-| 7 — Facturación y lanzamiento piloto | ⬜ Pendiente                                         | Un operador piloto puede pagar y usar la plataforma de forma autónoma              |
+| Hito                                 | Estado                                                  | Hecho cuando                                                                       |
+| ------------------------------------ | ------------------------------------------------------- | ---------------------------------------------------------------------------------- |
+| 0 — Cimientos                        | 🟡 En revisión (PR #1; falta verificar la vista previa) | El proyecto arranca en local, los tests pasan y hay un despliegue de vista previa  |
+| 1 — Cuentas y organizaciones         | ⬜ Pendiente                                            | Dos organizaciones de prueba no pueden ver datos la una de la otra                 |
+| 2 — Pisos y habitaciones             | ⬜ Pendiente                                            | El operador ve el estado de todas sus habitaciones en una pantalla                 |
+| 3 — Formulario del candidato         | ⬜ Pendiente                                            | Un candidato puede postularse desde el móvil sin registrarse                       |
+| 4 — Puntuación y pipeline            | ⬜ Pendiente                                            | El operador ve un ranking explicado y puede aceptar a un candidato                 |
+| 5 — Bandeja de leads por email       | ⬜ Pendiente                                            | Un aviso reenviado de idealista crea un lead y envía el formulario automáticamente |
+| 6 — Paquete de anuncio               | ⬜ Pendiente                                            | Publicar una habitación en tres portales lleva menos de cinco minutos              |
+| 7 — Facturación y lanzamiento piloto | ⬜ Pendiente                                            | Un operador piloto puede pagar y usar la plataforma de forma autónoma              |
 
 ## Registro
 
@@ -44,33 +44,40 @@ Hecho:
 - Hook `.githooks/pre-commit` que bloquea archivos prohibidos y patrones de claves; probado con claves falsas en un repo temporal.
 - Sección «Repositorio público» añadida a `CLAUDE.md`.
 
-## Antes de subir a GitHub (checklist)
+### 2026-10-20 — Hito 0: Cimientos
 
-- [ ] Crear el repo en GitHub **vacío** (sin README, licencia ni `.gitignore`: ya los tenemos o vendrán en el Hito 0).
-- [ ] En _Settings → Code security_, comprobar que estén activos **Secret scanning** y **Push protection** (GitHub bloquea en el servidor los pushes con claves conocidas). Activar también **Dependabot alerts**.
-- [ ] Revisar `git log --format='%an <%ae>'` y confirmar que el autor es el correcto.
-- [ ] Si en GitHub tienes activado «Block command line pushes that expose my email» (_Settings → Emails_), el push se rechazará: desactívalo o pasa a usar el email noreply.
-- [ ] Elegir licencia (o ninguna: sin licencia, el código es visible pero nadie tiene permiso legal para reutilizarlo).
+Hecho (rama `chore/hito-0`, PR #1):
 
-## Notas para el Hito 0
+- Next.js 16.4 (App Router) + TypeScript 5.9 estricto (con `noUncheckedIndexedAccess`) + Tailwind CSS 4 + shadcn/ui (base Radix). Página provisional en español con `<html lang="es">`.
+- Prettier (con orden de clases de Tailwind) + ESLint 9 de Next.
+- Vitest 5 + Testing Library + cobertura v8 (`tests/unit/`). Playwright con perfiles de escritorio y móvil (`tests/e2e/`).
+- Supabase local con el CLI 2.121 fijado como dependencia (Postgres 17), `seed.sql` vacío, scripts `db:*` y tipos generados en `src/types/database.ts`.
+- `.env.example` con las variables de Supabase vacías; script `prepare` que activa el hook al instalar.
+- CI en GitHub Actions: formato, lint, tipos, tests con cobertura, build y e2e; workflow aparte de gitleaks (commits nuevos en PR y push; historial completo cada lunes); Dependabot con 3 días de espera. Actions fijadas por hash. CI en verde en el PR #1.
+- Vercel conectado al repo (plan Hobby) con las funciones en `fra1` (Frankfurt).
+- README, licencia «todos los derechos reservados» y ADR 0001–0003.
+- Repo publicado en `github.com/mariorodriguez255/rooms-platform` con Secret scanning, Push protection y Dependabot alerts activados. Revisión manual del historial publicado: sin secretos, archivos privados ni datos personales. Remoto por SSH.
 
-Entorno de desarrollo comprobado el 2026-10-20:
+Decisiones:
 
-| Herramienta                       | Estado                                                          |
-| --------------------------------- | --------------------------------------------------------------- |
-| git                               | ✅ 2.50.1                                                       |
-| Node.js                           | ✅ v24.22.0                                                     |
-| npm / npx                         | ✅ 11.19.1                                                      |
-| pnpm                              | ❌ no instalado (decidir gestor de paquetes en el plan)         |
-| Supabase CLI                      | ❌ no instalado                                                 |
-| Docker (o alternativa compatible) | ❌ no instalado — **necesario para levantar Supabase en local** |
-| GitHub CLI (`gh`)                 | ❌ no instalado (útil para la CI y los PR, no imprescindible)   |
+- **pnpm 12** con `minimumReleaseAge` de 3 días y scripts de instalación bloqueados (ADR 0001). Ya bloqueó `shadcn@4.22.1`; se usó la 4.22.0.
+- **TypeScript 5.9 y ESLint 9**, no las últimas, por compatibilidad con `typescript-eslint` y los plugins de Next (ADR 0002).
+- **Frankfurt** para Vercel y, en el Hito 1, para Supabase (ADR 0003). El build de Vercel corre en `iad1`, pero solo procesa código.
+- **Docker Desktop** como runtime de contenedores (gratis para uso personal y pequeñas empresas; OrbStack es de pago para uso comercial).
+- **Vercel Hobby** durante el desarrollo; pasar a **Pro antes del primer operador piloto** (Hobby es solo para uso no comercial).
+- `agentRules: false` en `next.config.ts`: Next no genera `AGENTS.md`; `CLAUDE.md` apunta a la documentación de Next incluida en `node_modules`.
+- El hook de secretos acepta las referencias exactas `"env(NOMBRE)"` de `supabase/config.toml` (probado con casos que deben pasar y casos que deben bloquearse).
+- Vite 8 resuelve los alias de `tsconfig` por sí mismo (`resolve.tsconfigPaths`): no se usa `vite-tsconfig-paths`.
+- Librería de traducción: se decide al empezar el Hito 1.
 
-Otros puntos a resolver en el plan:
+Pendiente para cerrar el hito:
 
-- La carpeta ya no está vacía (`CLAUDE.md`, `docs/`, `.git`). Comprobar si `create-next-app` acepta generar el proyecto aquí o si hay que generarlo aparte y mover los archivos.
-- Hacen falta cuentas en Supabase (proyecto en región UE), Vercel y GitHub para la vista previa y la CI.
-- `create-next-app` genera su propio `.gitignore`: fusionarlo con el nuestro sin perder ninguna regla de secretos.
-- Añadir un script `prepare` en `package.json` que ejecute `git config core.hooksPath .githooks`, para que el hook se active solo al hacer `npm install` en cualquier clon.
-- Añadir a la CI un escáner de secretos sobre todo el historial (por ejemplo gitleaks; verificar en su documentación oficial cómo se integra con GitHub Actions).
-- Crear `.env.example` con todas las variables y los valores vacíos.
+- [ ] Verificar la URL de vista previa de Vercel del PR #1.
+- [ ] Fusionar el PR #1 en `main` (eso arregla el despliegue de producción, que falla porque `main` aún no tiene la aplicación).
+
+Pendiente para el Hito 1:
+
+- Crear el proyecto de Supabase en la nube (`eu-central-1`, Frankfurt) y sus variables en Vercel.
+- Clientes de Supabase (`@supabase/ssr`), validación de variables de entorno con Zod y tests de Supabase en la CI.
+- Revisar la configuración de Auth de `supabase/config.toml` (longitud de contraseña, confirmación de email…).
+- Docker Desktop tiene unos 4 GB de RAM asignados: suficiente por ahora; subirlo si Supabase local va lento.
