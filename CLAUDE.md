@@ -5,6 +5,7 @@ Contexto y reglas del proyecto para Claude Code. Se carga en cada sesión.
 - **Fuente de verdad:** `docs/briefing.md` (original en `docs/briefing.pdf`). Si algo de aquí o de una propuesta choca con el briefing, manda el briefing salvo que Mario decida cambiarlo explícitamente. **El briefing es privado y solo existe en local** (está en `.gitignore`); si no lo encuentras, pídeselo a Mario y no lo reconstruyas.
 - **Estado del trabajo:** `docs/progress.md`.
 - **Decisiones de arquitectura:** `docs/decisions/` (ADR).
+- **Documentación de Next.js:** la de la versión instalada está en `node_modules/next/dist/docs/`. Consúltala antes de escribir código de Next: esta versión puede diferir de lo que recuerdas. (`agentRules: false` en `next.config.ts` evita que `next dev` genere un `AGENTS.md` con este mismo aviso.)
 
 ## Producto
 
