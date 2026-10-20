@@ -1,0 +1,8 @@
+# Supply-chain protection: do not install versions published less than
+# 3 days ago (in minutes). Gives the ecosystem time to catch compromised releases.
+minimumReleaseAge: 4320
+
+# Dependency install scripts are blocked unless explicitly allowed here.
+allowBuilds:
+  sharp: false
+  unrs-resolver: false
