@@ -39,10 +39,10 @@ jobs:
       - run: pnpm typecheck
       - run: pnpm test:coverage
 
-  e2e:
-    name: Build and end-to-end tests
+  database-e2e:
+    name: Database, integration and end-to-end tests
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 25
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -53,6 +53,26 @@ jobs:
           node-version-file: .nvmrc
           cache: pnpm
       - run: pnpm install --frozen-lockfile
+      # Local Supabase in Docker, applying supabase/migrations and seed.sql.
+      # Only what the app uses today: Postgres, Auth, the REST API and Mailpit.
+      - name: Start local Supabase
+        run: pnpm exec supabase start -x realtime,storage-api,imgproxy,postgres-meta,studio,edge-runtime,logflare,vector,supavisor
+      # The local keys are the same fixed development values in every Supabase
+      # installation: they are not secrets and only work against this runner.
+      - name: Expose the local Supabase settings
+        run: |
+          eval "$(pnpm exec supabase status -o env 2>/dev/null)"
+          {
+            echo "NEXT_PUBLIC_SUPABASE_URL=$API_URL"
+            echo "NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=$PUBLISHABLE_KEY"
+            echo "SUPABASE_SECRET_KEY=$SECRET_KEY"
+            echo "MAILPIT_URL=$MAILPIT_URL"
+          } >> "$GITHUB_ENV"
+      - name: RLS and database tests (pgTAP)
+        run: pnpm db:test
+      - name: Generated database types are up to date
+        run: pnpm db:types && git diff --exit-code src/types/database.ts
+      - run: pnpm test:integration
       - run: pnpm build
       - run: pnpm exec playwright install --with-deps chromium
       - run: pnpm test:e2e
