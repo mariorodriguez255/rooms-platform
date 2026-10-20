@@ -26,5 +26,6 @@ El Hito 1 necesita registro, inicio de sesión y recuperación de contraseña. E
 ## Consecuencias
 
 - Hace falta un **SMTP propio** antes de abrir el registro a terceros: el SMTP incluido en Supabase solo envía a los miembros del equipo del proyecto. Se configura cuando se elija el proveedor de email saliente (Hito 3).
+- **URLs de redirección permitidas en la nube** (`[remotes.cloud]` en `supabase/config.toml`): solo `/auth/confirm` en producción y en las vistas previas de este proyecto y esta cuenta de Vercel (`rooms-platform-*-mariorodriguez255s-projects.vercel.app`). Nunca un comodín amplio como `**.vercel.app`: cualquier usuario de Vercel podría recibir los tokens de los enlaces. Queda un riesgo residual mientras se acepten vistas previas, por eso el proyecto de producción del piloto solo permitirá la URL de producción.
 - Al pasar a Supabase Pro, activar la comprobación de contraseñas filtradas.
 - MFA queda para más adelante.

@@ -421,3 +421,23 @@ enabled = true
 # formatted with uppercase keywords, indent 2, max width 180, trailing commas,
 # and column/key alignment. Set to "null" to emit raw, unformatted SQL.
 # format_options = "{\"keywordCase\":\"upper\",\"indent\":2,\"maxWidth\":180,\"commaStyle\":\"trailing\"}"
+
+# =====================================================================
+# Hosted project (eu-central-1, Frankfurt). Everything above also applies
+# to it when running `supabase config push`; only these values differ.
+# For now it serves both Vercel previews and production (no real data
+# until the pilot). Before the pilot a separate production project will
+# allow only the production URL. See docs/decisions/0004.
+# =====================================================================
+[remotes.cloud]
+project_id = "dnwzdrnleixdeamqtifa"
+
+[remotes.cloud.auth]
+site_url = "https://rooms-platform.vercel.app"
+# Email links are only accepted towards /auth/confirm, on production or on
+# a preview of this project and Vercel account. Never a bare wildcard such
+# as "**.vercel.app": any Vercel user could receive the tokens.
+additional_redirect_urls = [
+  "https://rooms-platform.vercel.app/auth/confirm**",
+  "https://rooms-platform-*-mariorodriguez255s-projects.vercel.app/auth/confirm**",
+]
