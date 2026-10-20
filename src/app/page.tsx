@@ -1,3 +1,5 @@
+import { Button } from "@/components/ui/button";
+
 export default function Home() {
   return (
     <main className="flex min-h-screen flex-col items-center justify-center gap-4 p-6 text-center">
@@ -6,7 +8,7 @@ export default function Home() {
         Sigue publicando en idealista, Badi o Airbnb; todo lo que pasa después
         lo gestionas aquí.
       </p>
-      <p className="text-sm">En construcción.</p>
+      <Button disabled>Próximamente</Button>
     </main>
   );
 }
