@@ -51,6 +51,9 @@ patterns=(
 )
 # Generic "something_key = 'long value'" assignments (case-insensitive).
 generic='(api[_-]?key|secret|token|passw(or)?d|private[_-]?key)[[:space:]]*[:=][[:space:]]*["'"'"'][^"'"'"'[:space:]]{12,}["'"'"']'
+# A value that is exactly "env(UPPER_CASE_NAME)" is a reference to an
+# environment variable (supabase/config.toml syntax), not a secret.
+env_reference='[:=][[:space:]]*["'"'"']env\([A-Z0-9_]+\)["'"'"']'
 # In .env.example every secret-looking variable must stay empty.
 env_example='^[A-Z0-9_]*(SECRET|TOKEN|PASSWORD|PRIVATE|_KEY)[A-Z0-9_]*=[^[:space:]]+'
 
@@ -67,7 +70,8 @@ scan_file() {
     [[ -n "$line" ]] && report "Possible secret in $file: ${line:0:80}"
   done
 
-  line=$(printf '%s\n' "$added" | grep -iE -e "$generic" | head -n 1)
+  line=$(printf '%s\n' "$added" | grep -iE -e "$generic" \
+    | grep -vE -e "$env_reference" | head -n 1)
   [[ -n "$line" ]] && report "Possible hardcoded secret in $file: ${line:0:80}"
 
   if [[ "$file" == ".env.example" || "$file" == */.env.example ]]; then
