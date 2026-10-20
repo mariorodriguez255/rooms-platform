@@ -109,7 +109,7 @@ Decisiones (además de los ADR):
 Pendiente para cerrar el hito:
 
 - [x] Mario: crear el proyecto de Supabase en `eu-central-1` (ref `dnwzdrnleixdeamqtifa`). Sus URLs de Auth están en `[remotes.cloud]` de `supabase/config.toml`.
-- [ ] Configurar Auth en la nube (URL del sitio, URLs de redirección de Vercel, confirmación de email, 12 caracteres, plantillas) y aplicar la migración (`supabase link`, `config diff`/`config push`, `db push`). Lo ejecuta Mario porque pide su sesión y la contraseña de la BD.
+- [x] Auth configurado en la nube con `supabase config push` (URLs, confirmación de email, 12 caracteres, `secure_password_change`, sin MFA por ahora) y migración aplicada con `supabase db push` (comprobado con `migration list`).
 - [ ] Variables `NEXT_PUBLIC_SUPABASE_URL` y `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` en Vercel (no la clave secreta).
 - [ ] Probar en la vista previa: registro con el email de Mario (el SMTP incluido solo envía a miembros del equipo de Supabase; abrir el enlace en el mismo navegador), crear organización e invitar.
 - [ ] CI en verde en el PR y revisión de Mario.
