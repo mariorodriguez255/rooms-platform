@@ -4,16 +4,16 @@ Estado de los hitos de la sección 13 del briefing. Se actualiza al terminar cad
 
 Leyenda: ⬜ pendiente · 🟡 en curso · ✅ hecho
 
-| Hito                                 | Estado                                                  | Hecho cuando                                                                       |
-| ------------------------------------ | ------------------------------------------------------- | ---------------------------------------------------------------------------------- |
-| 0 — Cimientos                        | 🟡 En revisión (PR #1; falta verificar la vista previa) | El proyecto arranca en local, los tests pasan y hay un despliegue de vista previa  |
-| 1 — Cuentas y organizaciones         | ⬜ Pendiente                                            | Dos organizaciones de prueba no pueden ver datos la una de la otra                 |
-| 2 — Pisos y habitaciones             | ⬜ Pendiente                                            | El operador ve el estado de todas sus habitaciones en una pantalla                 |
-| 3 — Formulario del candidato         | ⬜ Pendiente                                            | Un candidato puede postularse desde el móvil sin registrarse                       |
-| 4 — Puntuación y pipeline            | ⬜ Pendiente                                            | El operador ve un ranking explicado y puede aceptar a un candidato                 |
-| 5 — Bandeja de leads por email       | ⬜ Pendiente                                            | Un aviso reenviado de idealista crea un lead y envía el formulario automáticamente |
-| 6 — Paquete de anuncio               | ⬜ Pendiente                                            | Publicar una habitación en tres portales lleva menos de cinco minutos              |
-| 7 — Facturación y lanzamiento piloto | ⬜ Pendiente                                            | Un operador piloto puede pagar y usar la plataforma de forma autónoma              |
+| Hito                                 | Estado                       | Hecho cuando                                                                       |
+| ------------------------------------ | ---------------------------- | ---------------------------------------------------------------------------------- |
+| 0 — Cimientos                        | ✅ Hecho (2026-10-20, PR #1) | El proyecto arranca en local, los tests pasan y hay un despliegue de vista previa  |
+| 1 — Cuentas y organizaciones         | ⬜ Pendiente                 | Dos organizaciones de prueba no pueden ver datos la una de la otra                 |
+| 2 — Pisos y habitaciones             | ⬜ Pendiente                 | El operador ve el estado de todas sus habitaciones en una pantalla                 |
+| 3 — Formulario del candidato         | ⬜ Pendiente                 | Un candidato puede postularse desde el móvil sin registrarse                       |
+| 4 — Puntuación y pipeline            | ⬜ Pendiente                 | El operador ve un ranking explicado y puede aceptar a un candidato                 |
+| 5 — Bandeja de leads por email       | ⬜ Pendiente                 | Un aviso reenviado de idealista crea un lead y envía el formulario automáticamente |
+| 6 — Paquete de anuncio               | ⬜ Pendiente                 | Publicar una habitación en tres portales lleva menos de cinco minutos              |
+| 7 — Facturación y lanzamiento piloto | ⬜ Pendiente                 | Un operador piloto puede pagar y usar la plataforma de forma autónoma              |
 
 ## Registro
 
@@ -70,10 +70,10 @@ Decisiones:
 - Vite 8 resuelve los alias de `tsconfig` por sí mismo (`resolve.tsconfigPaths`): no se usa `vite-tsconfig-paths`.
 - Librería de traducción: se decide al empezar el Hito 1.
 
-Pendiente para cerrar el hito:
+Cierre del hito:
 
-- [ ] Verificar la URL de vista previa de Vercel del PR #1.
-- [ ] Fusionar el PR #1 en `main` (eso arregla el despliegue de producción, que falla porque `main` aún no tiene la aplicación).
+- [x] Vista previa de Vercel del PR #1 verificada por Mario (la página se ve; protegida con Vercel Authentication).
+- [x] PR #1 fusionado en `main` por fast-forward (se conservan los commits y sus hashes). El despliegue de producción se rehace desde `main`.
 
 Pendiente para el Hito 1:
 
