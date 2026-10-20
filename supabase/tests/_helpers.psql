@@ -1,9 +1,23 @@
 -- Test helpers, included at the top of every test file with `\ir _helpers.psql`
 -- right after `begin;`. They live in a `tests` schema created inside the
--- test transaction, so the final rollback removes them: they never reach a
--- migration or the hosted database.
+-- test transaction, so the final rollback removes them: they are never part
+-- of a migration and nothing persists, locally or with `--linked`.
+
+-- `supabase test db --linked` connects with a temporary login role that
+-- cannot create schemas; act as postgres (as migrations do). Locally the
+-- runner already is postgres. `local`: undone with the test's rollback.
+set local role postgres;
 
 create extension if not exists pgtap with schema extensions;
+
+-- pgTAP functions (plan, ok, results_eq…) are called unqualified: put the
+-- schema where pgtap lives on the search path. Locally it is already there;
+-- on the hosted project SET ROLE does not apply postgres's search_path.
+select set_config(
+  'search_path',
+  'public, ' || (select extnamespace::regnamespace::text from pg_extension where extname = 'pgtap'),
+  true
+);
 
 create schema tests;
 grant usage on schema tests to anon, authenticated;

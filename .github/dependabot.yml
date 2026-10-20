@@ -10,6 +10,17 @@ updates:
     groups:
       minor-and-patch:
         update-types: [minor, patch]
+    ignore:
+      # The types must match the Node.js runtime (24, see .nvmrc and
+      # package.json engines): newer types allow APIs that Node 24 lacks.
+      - dependency-name: "@types/node"
+        update-types: ["version-update:semver-major"]
+      # TypeScript and ESLint stay on the majors of ADR 0002 until the Next.js
+      # template and its ESLint plugins move on.
+      - dependency-name: typescript
+        update-types: ["version-update:semver-major"]
+      - dependency-name: eslint
+        update-types: ["version-update:semver-major"]
 
   - package-ecosystem: github-actions
     directory: /

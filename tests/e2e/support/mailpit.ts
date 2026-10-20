@@ -28,7 +28,12 @@ export async function emailLink(to: string, subject: string): Promise<string> {
 
   const response = await fetch(`${MAILPIT_URL}/api/v1/message/${messageId}`);
   const message = (await response.json()) as MailpitMessage;
-  const href = /href="([^"]*token_hash=[^"]*)"/.exec(message.HTML)?.[1];
+  // Default templates link to Supabase (/auth/v1/verify), which redirects
+  // to /auth/confirm with ?code=; our own templates link to /auth/confirm
+  // with ?token_hash= (see src/app/auth/confirm/route.ts).
+  const href = /href="([^"]*(?:\/auth\/v1\/verify|token_hash=)[^"]*)"/.exec(
+    message.HTML,
+  )?.[1];
   if (!href) throw new Error(`No auth link in the email to ${to}`);
   // The template is HTML: & arrives as &amp;.
   return href.replaceAll("&amp;", "&");

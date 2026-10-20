@@ -39,13 +39,13 @@
       "hasAccount": "¿Ya tienes cuenta?",
       "loginLink": "Inicia sesión",
       "checkEmailTitle": "Revisa tu email",
-      "checkEmail": "Si {email} no tenía cuenta todavía, te hemos enviado un enlace para confirmarlo. Ábrelo para terminar de crear tu cuenta."
+      "checkEmail": "Si {email} no tenía cuenta todavía, te hemos enviado un enlace para confirmarlo. Ábrelo en este mismo navegador para entrar directamente."
     },
     "forgotPassword": {
       "title": "Recuperar la contraseña",
       "description": "Te enviaremos un enlace para elegir una contraseña nueva.",
       "submit": "Enviar enlace",
-      "sent": "Si {email} tiene cuenta, te hemos enviado un enlace. Caduca en una hora.",
+      "sent": "Si {email} tiene cuenta, te hemos enviado un enlace. Ábrelo en este mismo navegador; caduca en una hora.",
       "backToLogin": "Volver a iniciar sesión"
     },
     "resetPassword": {
@@ -143,7 +143,8 @@
     "invitationExpired": "Esta invitación ha caducado.",
     "invitationEmailMismatch": "Esta invitación es para otro email.",
     "emailNotConfirmed": "Todavía no has confirmado tu email. Busca el mensaje que te enviamos al registrarte.",
-    "linkInvalid": "El enlace no es válido o ha caducado. Vuelve a intentarlo."
+    "linkInvalid": "El enlace no es válido o ha caducado. Vuelve a intentarlo.",
+    "linkOtherBrowser": "No hemos podido abrir la sesión con ese enlace: ábrelo en el mismo navegador en el que lo pediste. Si estabas confirmando tu email, ya está confirmado: inicia sesión."
   },
   "validation": {
     "required": "Este campo es obligatorio.",
