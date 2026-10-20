@@ -4,16 +4,16 @@ Estado de los hitos de la sección 13 del briefing. Se actualiza al terminar cad
 
 Leyenda: ⬜ pendiente · 🟡 en curso · ✅ hecho
 
-| Hito                                 | Estado                       | Hecho cuando                                                                       |
-| ------------------------------------ | ---------------------------- | ---------------------------------------------------------------------------------- |
-| 0 — Cimientos                        | ✅ Hecho (2026-10-20, PR #1) | El proyecto arranca en local, los tests pasan y hay un despliegue de vista previa  |
-| 1 — Cuentas y organizaciones         | ✅ Hecho (2026-10-20, PR #6) | Dos organizaciones de prueba no pueden ver datos la una de la otra                 |
-| 2 — Pisos y habitaciones             | ⬜ Pendiente                 | El operador ve el estado de todas sus habitaciones en una pantalla                 |
-| 3 — Formulario del candidato         | ⬜ Pendiente                 | Un candidato puede postularse desde el móvil sin registrarse                       |
-| 4 — Puntuación y pipeline            | ⬜ Pendiente                 | El operador ve un ranking explicado y puede aceptar a un candidato                 |
-| 5 — Bandeja de leads por email       | ⬜ Pendiente                 | Un aviso reenviado de idealista crea un lead y envía el formulario automáticamente |
-| 6 — Paquete de anuncio               | ⬜ Pendiente                 | Publicar una habitación en tres portales lleva menos de cinco minutos              |
-| 7 — Facturación y lanzamiento piloto | ⬜ Pendiente                 | Un operador piloto puede pagar y usar la plataforma de forma autónoma              |
+| Hito                                 | Estado                            | Hecho cuando                                                                       |
+| ------------------------------------ | --------------------------------- | ---------------------------------------------------------------------------------- |
+| 0 — Cimientos                        | ✅ Hecho (2026-10-20, PR #1)      | El proyecto arranca en local, los tests pasan y hay un despliegue de vista previa  |
+| 1 — Cuentas y organizaciones         | ✅ Hecho (2026-10-20, PR #5 y #6) | Dos organizaciones de prueba no pueden ver datos la una de la otra                 |
+| 2 — Pisos y habitaciones             | ⬜ Pendiente                      | El operador ve el estado de todas sus habitaciones en una pantalla                 |
+| 3 — Formulario del candidato         | ⬜ Pendiente                      | Un candidato puede postularse desde el móvil sin registrarse                       |
+| 4 — Puntuación y pipeline            | ⬜ Pendiente                      | El operador ve un ranking explicado y puede aceptar a un candidato                 |
+| 5 — Bandeja de leads por email       | ⬜ Pendiente                      | Un aviso reenviado de idealista crea un lead y envía el formulario automáticamente |
+| 6 — Paquete de anuncio               | ⬜ Pendiente                      | Publicar una habitación en tres portales lleva menos de cinco minutos              |
+| 7 — Facturación y lanzamiento piloto | ⬜ Pendiente                      | Un operador piloto puede pagar y usar la plataforma de forma autónoma              |
 
 ## Registro
 
@@ -115,7 +115,7 @@ Cierre del hito:
 - [x] Probado por Mario en la vista previa: registro con confirmación de email, creación de organización e invitación aceptada desde otro dispositivo con una segunda cuenta.
   - La segunda cuenta se creó desde el panel de Supabase con _Auto Confirm User_, porque el SMTP incluido solo envía a los miembros del equipo.
   - Para abrir la vista previa en otro dispositivo hizo falta un _Sharable Link_ de Vercel: las vistas previas están protegidas con Vercel Authentication y la producción no.
-- [x] CI en verde en el PR #6 (formato, lint, tipos, unitarios, pgTAP, integración, e2e, build y gitleaks) y revisión de Mario.
+- [x] CI en verde en el PR #6, que completa al #5, fusionado antes con el trabajo hasta `4480f21` (formato, lint, tipos, unitarios, pgTAP, integración, e2e, build y gitleaks) y revisión de Mario.
 
 Pendiente para hitos posteriores:
 
