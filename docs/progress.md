@@ -4,16 +4,16 @@ Estado de los hitos de la sección 13 del briefing. Se actualiza al terminar cad
 
 Leyenda: ⬜ pendiente · 🟡 en curso · ✅ hecho
 
-| Hito                                 | Estado                       | Hecho cuando                                                                       |
-| ------------------------------------ | ---------------------------- | ---------------------------------------------------------------------------------- |
-| 0 — Cimientos                        | ✅ Hecho (2026-10-20, PR #1) | El proyecto arranca en local, los tests pasan y hay un despliegue de vista previa  |
-| 1 — Cuentas y organizaciones         | ⬜ Pendiente                 | Dos organizaciones de prueba no pueden ver datos la una de la otra                 |
-| 2 — Pisos y habitaciones             | ⬜ Pendiente                 | El operador ve el estado de todas sus habitaciones en una pantalla                 |
-| 3 — Formulario del candidato         | ⬜ Pendiente                 | Un candidato puede postularse desde el móvil sin registrarse                       |
-| 4 — Puntuación y pipeline            | ⬜ Pendiente                 | El operador ve un ranking explicado y puede aceptar a un candidato                 |
-| 5 — Bandeja de leads por email       | ⬜ Pendiente                 | Un aviso reenviado de idealista crea un lead y envía el formulario automáticamente |
-| 6 — Paquete de anuncio               | ⬜ Pendiente                 | Publicar una habitación en tres portales lleva menos de cinco minutos              |
-| 7 — Facturación y lanzamiento piloto | ⬜ Pendiente                 | Un operador piloto puede pagar y usar la plataforma de forma autónoma              |
+| Hito                                 | Estado                           | Hecho cuando                                                                       |
+| ------------------------------------ | -------------------------------- | ---------------------------------------------------------------------------------- |
+| 0 — Cimientos                        | ✅ Hecho (2026-10-20, PR #1)     | El proyecto arranca en local, los tests pasan y hay un despliegue de vista previa  |
+| 1 — Cuentas y organizaciones         | 🟡 En curso (rama `feat/hito-1`) | Dos organizaciones de prueba no pueden ver datos la una de la otra                 |
+| 2 — Pisos y habitaciones             | ⬜ Pendiente                     | El operador ve el estado de todas sus habitaciones en una pantalla                 |
+| 3 — Formulario del candidato         | ⬜ Pendiente                     | Un candidato puede postularse desde el móvil sin registrarse                       |
+| 4 — Puntuación y pipeline            | ⬜ Pendiente                     | El operador ve un ranking explicado y puede aceptar a un candidato                 |
+| 5 — Bandeja de leads por email       | ⬜ Pendiente                     | Un aviso reenviado de idealista crea un lead y envía el formulario automáticamente |
+| 6 — Paquete de anuncio               | ⬜ Pendiente                     | Publicar una habitación en tres portales lleva menos de cinco minutos              |
+| 7 — Facturación y lanzamiento piloto | ⬜ Pendiente                     | Un operador piloto puede pagar y usar la plataforma de forma autónoma              |
 
 ## Registro
 
@@ -81,3 +81,40 @@ Pendiente para el Hito 1:
 - Clientes de Supabase (`@supabase/ssr`), validación de variables de entorno con Zod y tests de Supabase en la CI.
 - Revisar la configuración de Auth de `supabase/config.toml` (longitud de contraseña, confirmación de email…).
 - Docker Desktop tiene unos 4 GB de RAM asignados: suficiente por ahora; subirlo si Supabase local va lento.
+
+### 2026-10-20 — Hito 1: Cuentas y organizaciones
+
+Plan aprobado por Mario con estas respuestas: invitaciones por enlace copiable; matriz de roles propuesta; textos en español pero preparados para inglés; contrato de encargo de tratamiento en el Hito 7; contraseña mínima de 12 caracteres.
+
+Hecho (rama `feat/hito-1`):
+
+- **Base de datos** (`supabase/migrations/20261020163539_tenancy.sql`): `organizations`, `members`, `profiles` e `invitations` con RLS; ayudantes en el esquema `private`; RPC `create_organization`, `create_invitation`, `get_invitation` y `accept_invitation`; trigger que protege a los owners y garantiza que siempre haya uno; `anon` sin privilegios por defecto (ADR 0005).
+- **Auth**: registro con confirmación de email, inicio y cierre de sesión, recuperación de contraseña, `/auth/confirm`, `proxy.ts` con `@supabase/ssr` y Data Access Layer (ADR 0004). Plantillas de email en español.
+- **Organizaciones**: onboarding, selector de organización, ajustes (renombrar), miembros (cambiar rol, quitar, salir), invitaciones por enlace e invitaciones pendientes (anular), y `/invite/[token]`.
+- **Traducción**: next-intl sin rutas por idioma, con claves tipadas (ADR 0006).
+- **Tests** (ADR 0007): 95 de pgTAP (políticas, funciones e invariantes del esquema), 6 de integración contra la API de Supabase local, 45 unitarios y 8 e2e × 2 (escritorio y móvil). Los tests de BD se comprobaron rompiendo a propósito una política, el trigger y el RLS.
+- **CI**: job nuevo que levanta Supabase local y ejecuta pgTAP, la comprobación de tipos generados, integración, build y e2e.
+- Seed ficticio con dos organizaciones (usuarios en el README).
+
+Decisiones (además de los ADR):
+
+- **`<select>` nativo** (componente `native-select` de shadcn) en lugar del Select de Radix: con React 19.3 y Cache Components, Radix no mostraba el valor hasta abrirlo. El nativo además funciona sin JavaScript y abre el selector del sistema en el móvil.
+- **`Suspense` explícito dentro de cada página** en vez de `loading.tsx`: la validación de navegación instantánea de Next no acepta `loading.tsx` con Partial Prefetching.
+- **`connection()` en `createClient()`**: el cliente de Supabase usa la hora actual (caducidad del token), que Cache Components no permite al prerenderizar.
+- **Cabecera y lista de miembros adaptadas al móvil**: los e2e en móvil detectaron que la navegación tapaba el menú.
+- Falsos positivos del hook de secretos (claves de mensajes como `weakPassword` y contraseñas ficticias de los tests) marcados con `secret-scan:allow`.
+
+Pendiente para cerrar el hito:
+
+- [ ] Mario: crear el proyecto de Supabase en `eu-central-1` y pasar el _project ref_ (no es secreto).
+- [ ] Configurar Auth en la nube (URL del sitio, URLs de redirección de Vercel, confirmación de email, 12 caracteres, plantillas) y aplicar la migración (`supabase link`, `config diff`/`config push`, `db push`). Lo ejecuta Mario porque pide su sesión y la contraseña de la BD.
+- [ ] Variables `NEXT_PUBLIC_SUPABASE_URL` y `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` en Vercel (no la clave secreta).
+- [ ] Probar en la vista previa: registro con el email de Mario (el SMTP incluido solo envía a miembros del equipo de Supabase), crear organización e invitar.
+- [ ] CI en verde en el PR y revisión de Mario.
+
+Pendiente para hitos posteriores:
+
+- **SMTP propio** (Resend o Postmark) antes de que se registre nadie que no sea del equipo: Hito 3.
+- **Proxy fuera de la UE**: Vercel ejecuta `proxy.ts` en todas sus regiones (ver ADR 0003). Confirmar antes del piloto que la cookie de sesión está cubierta por el DPA de Vercel, o reducir lo que procesa el proxy.
+- Al pasar a Supabase Pro: comprobación de contraseñas filtradas. MFA más adelante.
+- Borrado de cuentas y organizaciones (y qué pasa si se borra el único owner): Hito 7.

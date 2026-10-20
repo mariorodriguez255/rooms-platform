@@ -21,10 +21,23 @@ pnpm install           # instala dependencias y activa el hook de secretos
 cp .env.example .env.local
 pnpm db:start          # levanta Supabase local (la primera vez descarga imágenes)
 pnpm db:status         # muestra la URL y las claves locales para .env.local
-pnpm dev               # http://localhost:3000
+pnpm dev               # http://localhost:3000 (usa localhost, no 127.0.0.1)
 ```
 
-Supabase Studio queda en http://localhost:54323.
+- Supabase Studio: http://localhost:54323
+- Mailpit (los emails que «envía» Supabase local): http://localhost:54324
+
+### Usuarios de prueba
+
+`pnpm db:reset` carga `supabase/seed.sql`: dos organizaciones ficticias que no deben verse entre sí. Todos los usuarios tienen la contraseña `rooms-demo-2026` (solo existe en local).
+
+| Usuario             | Organización          | Rol         |
+| ------------------- | --------------------- | ----------- |
+| `ana@example.com`   | Pisos Ejemplo Norte   | Propietario |
+| `bruno@example.com` | Pisos Ejemplo Norte   | Equipo      |
+| `carla@example.com` | Habitaciones Demo Sur | Propietario |
+
+Para registrar cuentas nuevas, el email de confirmación aparece en Mailpit.
 
 ## Scripts
 
@@ -34,14 +47,22 @@ Supabase Studio queda en http://localhost:54323.
 | `pnpm lint`                               | ESLint                                                      |
 | `pnpm typecheck`                          | Genera los tipos de rutas de Next y ejecuta `tsc`           |
 | `pnpm format` / `format:check`            | Prettier                                                    |
-| `pnpm test` / `test:watch`                | Tests unitarios (Vitest)                                    |
+| `pnpm test` / `test:watch`                | Tests unitarios (Vitest, sin base de datos)                 |
 | `pnpm test:coverage`                      | Tests unitarios con cobertura                               |
+| `pnpm test:integration`                   | Tests contra la API de Supabase local (necesita `db:start`) |
 | `pnpm test:e2e`                           | Tests de extremo a extremo (Playwright, escritorio y móvil) |
 | `pnpm db:start` / `db:stop` / `db:status` | Supabase local                                              |
 | `pnpm db:reset`                           | Recrea la base local: migraciones + `supabase/seed.sql`     |
+| `pnpm db:test`                            | Tests de RLS y funciones SQL con pgTAP (`supabase/tests/`)  |
 | `pnpm db:types`                           | Genera `src/types/database.ts` a partir del esquema local   |
 
-La primera vez que ejecutes los tests e2e, instala el navegador: `pnpm exec playwright install chromium`.
+La primera vez que ejecutes los tests e2e, instala el navegador: `pnpm exec playwright install chromium`. Los tests de integración y e2e necesitan Supabase local en marcha con el seed cargado.
+
+## Base de datos
+
+- Cada cambio de esquema es una migración nueva en `supabase/migrations/` (`pnpm exec supabase migration new <nombre>`). Después: `pnpm db:reset`, `pnpm db:types` y `pnpm db:test`.
+- Toda tabla nueva lleva RLS, `org_id` con índice y su test de aislamiento en `supabase/tests/`. El test `001_schema_invariants` falla si se olvida alguno.
+- El proyecto en la nube se actualiza a mano con `pnpm exec supabase db push` (el seed no se sube nunca).
 
 ## Seguridad
 
