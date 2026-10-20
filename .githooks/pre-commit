@@ -1,0 +1,90 @@
+#!/usr/bin/env bash
+# Pre-commit hook: blocks commits that would leak secrets or private files.
+# The repository is public. Activate once per clone with:
+#   git config core.hooksPath .githooks
+#
+# False positive? Add the marker "secret-scan:allow" on that same line,
+# or (last resort, after checking) commit with --no-verify.
+
+set -u
+
+RED=$'\033[31m'
+YELLOW=$'\033[33m'
+RESET=$'\033[0m'
+
+failed=0
+
+report() {
+  printf '%s✖ %s%s\n' "$RED" "$1" "$RESET" >&2
+  failed=1
+}
+
+# --- 1. Forbidden file names -----------------------------------------------
+# Matches .gitignore; catches files forced in with `git add -f`.
+forbidden_name='(^|/)(\.env(\..+)?|.+\.(pem|key|p12|pfx|keystore|eml|dump)|\.sentryclirc|service-account.*\.json|CLAUDE\.local\.md|settings\.local\.json)$'
+forbidden_path='^(private/|secrets/|\.secrets/|docs/briefing\.(md|pdf)$)'
+
+while IFS= read -r -d '' file; do
+  [[ "$file" == ".env.example" || "$file" == */.env.example ]] && continue
+  if [[ "$file" =~ $forbidden_name || "$file" =~ $forbidden_path ]]; then
+    report "Forbidden file staged: $file"
+  fi
+done < <(git diff --cached --name-only -z --diff-filter=ACMR)
+
+# --- 2. Secret patterns in added lines -------------------------------------
+patterns=(
+  '-----BEGIN [A-Z ]*PRIVATE KEY-----'            # private keys
+  '(sk|rk)_(live|test)_[0-9A-Za-z]{10,}'          # Stripe secret/restricted keys
+  'whsec_[0-9A-Za-z]{10,}'                        # Stripe webhook secrets
+  'sk-ant-[0-9A-Za-z_-]{20,}'                     # Anthropic API keys
+  'sk-proj-[0-9A-Za-z_-]{20,}'                    # OpenAI project keys
+  'sb_secret_[0-9A-Za-z_-]{10,}'                  # Supabase secret keys
+  'eyJ[0-9A-Za-z_-]{10,}\.eyJ[0-9A-Za-z_-]{10,}\.[0-9A-Za-z_-]{10,}'  # JWTs (e.g. Supabase service_role)
+  'gh[pousr]_[0-9A-Za-z]{36,}'                    # GitHub tokens
+  'github_pat_[0-9A-Za-z_]{20,}'                  # GitHub fine-grained tokens
+  'AKIA[0-9A-Z]{16}'                              # AWS access keys
+  'AIza[0-9A-Za-z_-]{35}'                         # Google API keys
+  'xox[abprs]-[0-9A-Za-z-]{10,}'                  # Slack tokens
+  'sntry[su]_[0-9A-Za-z_=-]{20,}'                 # Sentry auth tokens
+  'phx_[0-9A-Za-z]{20,}'                          # PostHog personal API keys
+  'postgres(ql)?://[^:/[:space:]]+:[^@[:space:]]+@' # DB URLs with password
+)
+# Generic "something_key = 'long value'" assignments (case-insensitive).
+generic='(api[_-]?key|secret|token|passw(or)?d|private[_-]?key)[[:space:]]*[:=][[:space:]]*["'"'"'][^"'"'"'[:space:]]{12,}["'"'"']'
+# In .env.example every secret-looking variable must stay empty.
+env_example='^[A-Z0-9_]*(SECRET|TOKEN|PASSWORD|PRIVATE|_KEY)[A-Z0-9_]*=[^[:space:]]+'
+
+scan_file() {
+  local file="$1" added line
+  added=$(git diff --cached -U0 --no-color --diff-filter=ACMR -- "$file" \
+    | grep -E '^\+' | grep -vE '^\+\+\+ ' | sed 's/^+//' \
+    | grep -v 'secret-scan:allow')
+  [[ -z "$added" ]] && return
+
+  for p in "${patterns[@]}"; do
+    line=$(printf '%s\n' "$added" | grep -E -e "$p" \
+      | grep -vE '@(127\.0\.0\.1|localhost)[:/]' | head -n 1)
+    [[ -n "$line" ]] && report "Possible secret in $file: ${line:0:80}"
+  done
+
+  line=$(printf '%s\n' "$added" | grep -iE -e "$generic" | head -n 1)
+  [[ -n "$line" ]] && report "Possible hardcoded secret in $file: ${line:0:80}"
+
+  if [[ "$file" == ".env.example" || "$file" == */.env.example ]]; then
+    line=$(printf '%s\n' "$added" | grep -E -e "$env_example" | head -n 1)
+    [[ -n "$line" ]] && report ".env.example must not contain secret values: ${line%%=*}=…"
+  fi
+}
+
+while IFS= read -r -d '' file; do
+  [[ "$file" == .githooks/* ]] && continue   # the patterns above would match themselves
+  scan_file "$file"
+done < <(git diff --cached --name-only -z --diff-filter=ACMR)
+
+if [[ $failed -ne 0 ]]; then
+  printf '\n%sCommit blocked: the repository is public.%s\n' "$RED" "$RESET" >&2
+  printf '%sRemove the secret (use environment variables) or unstage the file with: git restore --staged <file>%s\n' "$YELLOW" "$RESET" >&2
+  exit 1
+fi
+
+exit 0
