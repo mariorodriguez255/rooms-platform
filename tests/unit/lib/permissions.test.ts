@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import {
   assignableRoles,
+  canDeletePropertiesAndRooms,
   canEditOrganization,
   canManageMembers,
   canRemoveMember,
@@ -18,6 +19,14 @@ describe("role matrix", () => {
     expect(canManageMembers("owner")).toBe(true);
     expect(canManageMembers("admin")).toBe(true);
     expect(canManageMembers("staff")).toBe(false);
+  });
+
+  // Milestone 2: staff creates and edits; deleting is for owners and admins
+  // (supabase/tests/020_properties.test.sql and 021_rooms.test.sql).
+  it("lets only owners and admins delete properties and rooms", () => {
+    expect(canDeletePropertiesAndRooms("owner")).toBe(true);
+    expect(canDeletePropertiesAndRooms("admin")).toBe(true);
+    expect(canDeletePropertiesAndRooms("staff")).toBe(false);
   });
 
   it("lets only owners make or touch owners", () => {

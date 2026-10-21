@@ -19,6 +19,9 @@ describe("errorKeyFrom", () => {
     expect(errorKeyFrom({ code: "42501", message: "insufficient_role" })).toBe(
       "insufficientRole",
     );
+    expect(errorKeyFrom({ code: "P0001", message: "photo_limit" })).toBe(
+      "photoLimit",
+    );
   });
 
   it("never exposes unknown or internal messages", () => {

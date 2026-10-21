@@ -4,8 +4,10 @@ import type { Database } from "@/types/database";
 // rules enforced by the database (RLS policies and the guard_member_change
 // trigger); the database is what actually protects the data.
 //
-//   staff  day-to-day work (properties, candidates… from milestone 2)
-//   admin  + organization settings and members (except owners)
+//   staff  day-to-day work: create and edit properties and rooms, add and
+//          remove photos (candidates… from milestone 3)
+//   admin  + delete properties and rooms, organization settings and
+//          members (except owners)
 //   owner  + owners and billing (milestone 7)
 
 export type MemberRole = Database["public"]["Enums"]["member_role"];
@@ -33,6 +35,11 @@ export function canEditOrganization(role: MemberRole): boolean {
 }
 
 export function canManageMembers(role: MemberRole): boolean {
+  return isManager(role);
+}
+
+// Deleting a property or a room also deletes everything that hangs from it.
+export function canDeletePropertiesAndRooms(role: MemberRole): boolean {
   return isManager(role);
 }
 
