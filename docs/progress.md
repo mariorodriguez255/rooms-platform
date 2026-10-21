@@ -177,7 +177,7 @@ Decisiones (además de los ADR 0010 y 0011):
 
 - **El teléfono y el hash de la IP son parámetros opcionales** al final de `submit_application`, para que los tipos generados no obliguen a pasar valores falsos.
 - **Las validaciones numéricas devuelven claves traducibles:** un test detectó que Zod devolvía su mensaje interno en inglés con un valor no numérico.
-- **Los tests pgTAP filtran por las organizaciones del test**, porque el seed ya trae candidaturas (ADR 0007: los tests no dependen del seed).
+- **Los tests pgTAP filtran por las organizaciones del test**, porque el seed ya trae candidaturas (ADR 0007: los tests no dependen del seed). Al pasarlos contra la nube fallaron dos tests del Hito 2 (fotos y Storage) por el mismo motivo: contaban también las fotos reales subidas al revisar ese hito. Ahora todas las consultas y escrituras que hacen como `postgres` se limitan a las organizaciones del test (reproducido en local con una foto ajena).
 - **En los e2e cada test se postula desde su propia IP** (cabecera `X-Forwarded-For`), para no chocar con el límite de 5 envíos. En Vercel esa cabecera no se puede falsificar.
 - **La CI usa Mailpit para los emails de la app** y genera un `IP_HASH_SECRET` aleatorio en cada ejecución.
 - **Falsos positivos del hook de secretos:** los tokens ficticios del seed, marcados con `secret-scan:allow`.

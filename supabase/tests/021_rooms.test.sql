@@ -136,7 +136,7 @@ select throws_ok(
 
 -- Deleting a property deletes its rooms.
 select tests.as_admin();
-delete from public.properties where name = 'Piso A2';
+delete from public.properties where org_id = tests.org_id('Org A') and name = 'Piso A2';
 select results_eq(
   $$select name from public.rooms where org_id = tests.org_id('Org A')$$,
   array['Hab A1-1'],
@@ -157,9 +157,11 @@ select throws_ok(
 );
 
 select tests.as_admin();
-update public.rooms set updated_at = '2000-01-01' where name = 'Hab A1-1';
+update public.rooms set updated_at = '2000-01-01'
+where org_id = tests.org_id('Org A') and name = 'Hab A1-1';
 select results_eq(
-  $$select updated_at = now() from public.rooms where name = 'Hab A1-1'$$,
+  $$select updated_at = now() from public.rooms
+    where org_id = tests.org_id('Org A') and name = 'Hab A1-1'$$,
   array[true],
   'updated_at is set by the database on every update'
 );

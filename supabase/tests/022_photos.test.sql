@@ -11,6 +11,8 @@ select tests.create_room('Piso A2', 'Hab A2-1');
 
 -- Rows of the photos table only: the files themselves are tested in
 -- 023_storage.test.sql.
+-- Queries as postgres filter by the test organizations: the database may
+-- hold other photos (the hosted project, with --linked, has real ones).
 
 select tests.authenticate_as_anon();
 select throws_ok(
@@ -113,9 +115,10 @@ select results_eq(
 select tests.as_admin();
 insert into public.photos (org_id, property_id, storage_path, width, height)
 values (tests.org_id('Org A'), tests.property_id('Piso A1'), tests.photo_path('Piso A1'), 800, 600);
-delete from public.rooms where name = 'Hab A1-1';
+delete from public.rooms where org_id = tests.org_id('Org A') and name = 'Hab A1-1';
 select results_eq(
-  $$select room_id is null, width from public.photos$$,
+  $$select room_id is null, width from public.photos
+    where org_id = tests.org_id('Org A')$$,
   $$values (true, 800)$$,
   'deleting a room deletes its photos and keeps the common areas'''
 );

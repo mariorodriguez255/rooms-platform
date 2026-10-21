@@ -4,6 +4,8 @@ begin;
 -- Policies of the photos bucket, checked on storage.objects directly. These
 -- rows are metadata only (no file is stored) and the rollback removes them.
 -- The integration tests repeat the scenario through the Storage API.
+-- Queries as postgres filter by the test organizations: the bucket may hold
+-- other files (the hosted project, with --linked, has real ones).
 
 select plan(16);
 select tests.two_orgs();
@@ -98,7 +100,9 @@ select is_empty(
 
 select tests.as_admin();
 select results_eq(
-  $$select count(*)::int from storage.objects where bucket_id = 'photos'$$,
+  $$select count(*)::int from storage.objects
+    where bucket_id = 'photos'
+      and private.org_from_path(name) = tests.org_id('Org A')$$,
   array[1],
   'the denied writes left the object intact'
 );
