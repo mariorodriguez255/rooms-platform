@@ -7,9 +7,18 @@ import { expect } from "@playwright/test";
 const MAILPIT_URL = process.env.MAILPIT_URL ?? "http://127.0.0.1:54324";
 
 type MailpitSearch = { messages: { ID: string; Subject: string }[] };
-type MailpitMessage = { HTML: string };
+export type MailpitMessage = {
+  Subject: string;
+  HTML: string;
+  Text: string;
+  ReplyTo: { Address: string }[] | null;
+};
 
-export async function emailLink(to: string, subject: string): Promise<string> {
+// Waits for an email to `to` whose subject contains `subject` and returns it.
+export async function findEmail(
+  to: string,
+  subject: string,
+): Promise<MailpitMessage> {
   let messageId: string | undefined;
   await expect
     .poll(
@@ -27,7 +36,11 @@ export async function emailLink(to: string, subject: string): Promise<string> {
     .toBeTruthy();
 
   const response = await fetch(`${MAILPIT_URL}/api/v1/message/${messageId}`);
-  const message = (await response.json()) as MailpitMessage;
+  return (await response.json()) as MailpitMessage;
+}
+
+export async function emailLink(to: string, subject: string): Promise<string> {
+  const message = await findEmail(to, subject);
   // Default templates link to Supabase (/auth/v1/verify), which redirects
   // to /auth/confirm with ?code=; our own templates link to /auth/confirm
   // with ?token_hash= (see src/app/auth/confirm/route.ts).
