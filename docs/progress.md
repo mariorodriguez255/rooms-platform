@@ -191,7 +191,7 @@ Cierre del hito:
   - `EMAIL_PROVIDER=resend` y `EMAIL_FROM=rooms-platform <onboarding@resend.dev>`.
   - `RESEND_API_KEY` (Sensitive), de una cuenta de Resend con tu email. Sin dominio, Resend solo entrega a ese email.
   - Alternativa sin emails: `EMAIL_PROVIDER=disabled`.
-- [ ] Mario: `supabase db push` (la migración) y `supabase test db --linked`.
+- [x] Migración aplicada en la nube (`supabase db push`) y pgTAP contra la nube (`supabase test db --linked`): 204/204 en verde, tras limitar los tests de fotos y Storage a sus organizaciones.
 - [ ] Mario: en la vista previa, poner el email de contacto en Ajustes, abrir el enlace de una habitación desde el móvil y postularse con tu email.
 
 Pendiente para hitos posteriores:
