@@ -83,7 +83,8 @@ export async function PhotoSection({
                       width={photo.width}
                       height={photo.height}
                       unoptimized
-                      loading="lazy"
+                      // The first one may be the largest image in view.
+                      loading={index === 0 ? "eager" : "lazy"}
                       className="aspect-[4/3] w-full rounded-md bg-muted object-cover"
                     />
                   ) : (
