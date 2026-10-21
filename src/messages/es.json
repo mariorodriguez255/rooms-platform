@@ -98,7 +98,9 @@
       "title": "Organización",
       "description": "Datos de tu organización.",
       "name": "Nombre",
-      "readOnly": "Solo los propietarios y administradores pueden cambiar estos datos."
+      "readOnly": "Solo los propietarios y administradores pueden cambiar estos datos.",
+      "contactEmail": "Email de contacto para candidatos",
+      "contactEmailHelp": "Aparece en el formulario público para que los candidatos ejerzan sus derechos de protección de datos, y recibe sus respuestas a los emails de confirmación. Sin él, los enlaces no admiten candidaturas."
     },
     "members": {
       "title": "Miembros",
@@ -432,5 +434,35 @@
       "cta": "Ver la candidatura",
       "footer": "Recibes este aviso porque eres miembro de {organization} en rooms-platform."
     }
+  },
+  "applications": {
+    "linkTitle": "Enlace para candidatos",
+    "linkHelp": "Compártelo en tus anuncios y respuestas: quien lo abra puede postularse desde el móvil sin registrarse.",
+    "link": "Enlace para candidatos de {room}",
+    "copy": "Copiar enlace",
+    "copied": "Copiado",
+    "open": "Abrir",
+    "rotate": "Generar enlace nuevo",
+    "rotateTitle": "¿Generar un enlace nuevo?",
+    "rotateDescription": "El enlace actual dejará de funcionar al momento. Las candidaturas recibidas no cambian.",
+    "closedUnavailable": "No admite candidaturas mientras la habitación esté como No disponible.",
+    "closedNoContact": "No admite candidaturas hasta que la organización tenga un email de contacto para candidatos.",
+    "setContact": "Añadirlo en Ajustes",
+    "listTitle": "Candidaturas",
+    "empty": "Todavía no hay candidaturas.",
+    "received": "Recibida el {date}",
+    "moveIn": "Entrada: {date}",
+    "detailTitle": "Candidatura",
+    "forRoom": "Para {room} ({property})",
+    "contact": "Contacto",
+    "answers": "Respuestas",
+    "consent": "Consentimiento",
+    "consentGiven": "Aceptado el {date} (versión del texto: {version})",
+    "adultDeclared": "Ha declarado ser mayor de edad.",
+    "notAnswered": "Sin respuesta",
+    "income": "{amount}/mes",
+    "habitValue": "{value} de 5",
+    "updated": "Actualizada el {date} (volvió a enviar el formulario)",
+    "notFound": "No encontramos esta candidatura. Puede que la hayan borrado."
   }
 }

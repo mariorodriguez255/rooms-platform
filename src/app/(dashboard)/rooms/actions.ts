@@ -1,5 +1,6 @@
 "use server";
 
+import { refresh } from "next/cache";
 import { redirect } from "next/navigation";
 
 import type { ActionResult } from "@/components/actions/types";
@@ -157,6 +158,10 @@ export async function deleteRoom(roomId: string): Promise<ActionResult> {
     .select("property_id");
   const deleted = data?.[0];
   if (error || !deleted) {
+    // 23503: it has applications (they keep it from being deleted).
+    if (error?.code === "23503") {
+      return { status: "error", error: "roomHasApplications" };
+    }
     return {
       status: "error",
       error: error ? errorKeyFrom(error) : "insufficientRole",
@@ -168,4 +173,26 @@ export async function deleteRoom(roomId: string): Promise<ActionResult> {
     photos.data.map((photo) => photo.storage_path),
   );
   redirect(`/properties/${deleted.property_id}`);
+}
+
+// Replaces the room's public link: the previous one stops working at once.
+export async function rotateRoomToken(roomId: string): Promise<ActionResult> {
+  await getActiveMembership();
+  if (!roomIdSchema.safeParse(roomId).success) {
+    return { status: "error", error: "notFound" };
+  }
+
+  const supabase = await createClient();
+  const { error } = await supabase.rpc("rotate_room_token", {
+    target_room: roomId,
+  });
+  if (error) {
+    return {
+      status: "error",
+      error: error.message === "not_found" ? "notFound" : errorKeyFrom(error),
+    };
+  }
+
+  refresh();
+  return { status: "success" };
 }

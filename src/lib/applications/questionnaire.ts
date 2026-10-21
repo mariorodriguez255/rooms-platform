@@ -181,3 +181,30 @@ export function toAnswers(form: ApplicationForm): Answers {
     adult_declared: true,
   };
 }
+
+// Reads stored answers for display. They were validated on the way in,
+// but `answers` is JSON to TypeScript: anything unexpected is dropped
+// instead of breaking the page.
+const storedAnswersSchema = z.object({
+  move_in_date: z.string().optional().catch(undefined),
+  stay_months: z.number().optional().catch(undefined),
+  occupation: z.enum(OCCUPATIONS).optional().catch(undefined),
+  monthly_income: z.number().optional().catch(undefined),
+  schedule: z.enum(SCHEDULES).optional().catch(undefined),
+  remote_work: z.enum(REMOTE_WORK).optional().catch(undefined),
+  cleanliness: z.number().optional().catch(undefined),
+  noise: z.number().optional().catch(undefined),
+  visits: z.number().optional().catch(undefined),
+  common_areas: z.number().optional().catch(undefined),
+  smoking: z.enum(SMOKING).optional().catch(undefined),
+  pets: z.boolean().optional().catch(undefined),
+  introduction: z.string().optional().catch(undefined),
+  adult_declared: z.boolean().optional().catch(undefined),
+});
+
+export type StoredAnswers = z.infer<typeof storedAnswersSchema>;
+
+export function readAnswers(json: unknown): StoredAnswers {
+  const result = storedAnswersSchema.safeParse(json);
+  return result.success ? result.data : {};
+}

@@ -61,7 +61,7 @@ export async function findRoom(
   const { data, error } = await supabase
     .from("rooms")
     .select(
-      "id, property_id, name, price_cents, deposit_cents, size_m2, features, status, available_from, properties (name)",
+      "id, property_id, name, price_cents, deposit_cents, size_m2, features, status, available_from, public_token, properties (name)",
     )
     .eq("org_id", orgId)
     .eq("id", roomId)

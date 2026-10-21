@@ -4,12 +4,15 @@ import Link from "next/link";
 import { Suspense } from "react";
 
 import { ConfirmActionDialog } from "@/components/actions/confirm-action-dialog";
+import { ApplicationsCard } from "@/components/applications/applications-card";
+import { CandidateLinkCard } from "@/components/applications/candidate-link-card";
 import { ContentSkeleton } from "@/components/layout/content-skeleton";
 import { NotFoundNotice } from "@/components/layout/not-found-notice";
 import { PhotoSection } from "@/components/photos/photo-section";
 import { RoomStateBadge } from "@/components/rooms/room-state-badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { getContactEmail } from "@/lib/applications/queries";
 import { canDeletePropertiesAndRooms } from "@/lib/auth/permissions";
 import { getActiveMembership } from "@/lib/auth/session";
 import { todayInSpain } from "@/lib/dates";
@@ -17,6 +20,7 @@ import { centsToEuros, euroFormatOptions } from "@/lib/money";
 import { getBoardState } from "@/lib/rooms/board-state";
 import { featuresFromJson } from "@/lib/rooms/features";
 import { findRoom } from "@/lib/rooms/queries";
+import { getRequestOrigin } from "@/lib/request-origin";
 import { createClient } from "@/lib/supabase/server";
 import { roomIdSchema } from "@/lib/validation/property";
 
@@ -58,6 +62,10 @@ async function RoomDetails({
     );
   }
 
+  const [contactEmail, origin] = await Promise.all([
+    getContactEmail(supabase, active.orgId),
+    getRequestOrigin(),
+  ]);
   const today = todayInSpain();
   const euros = (cents: number) =>
     format.number(centsToEuros(cents), euroFormatOptions(cents));
@@ -127,6 +135,14 @@ async function RoomDetails({
           </div>
         </CardContent>
       </Card>
+
+      <CandidateLinkCard
+        room={room}
+        origin={origin}
+        contactEmail={contactEmail}
+      />
+
+      <ApplicationsCard orgId={active.orgId} roomId={room.id} />
 
       <PhotoSection
         orgId={active.orgId}

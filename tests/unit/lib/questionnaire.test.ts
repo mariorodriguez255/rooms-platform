@@ -7,6 +7,7 @@ import { CONSENT_VERSION } from "@/lib/applications/consent";
 import {
   ANSWER_KEYS,
   applicationFormSchema,
+  readAnswers,
   toAnswers,
 } from "@/lib/applications/questionnaire";
 import { fieldErrorsFrom } from "@/lib/validation/form";
@@ -204,5 +205,25 @@ describe("questionnaire and consent texts", () => {
         "rights",
       ].sort(),
     );
+  });
+});
+
+describe("readAnswers", () => {
+  it("reads stored answers and drops anything unexpected", () => {
+    expect(
+      readAnswers({
+        move_in_date: "2026-12-01",
+        occupation: "worker",
+        cleanliness: 4,
+        smoking: "sometimes",
+        pets: "no",
+      }),
+    ).toEqual({
+      move_in_date: "2026-12-01",
+      occupation: "worker",
+      cleanliness: 4,
+    });
+    expect(readAnswers(null)).toEqual({});
+    expect(readAnswers([1, 2])).toEqual({});
   });
 });

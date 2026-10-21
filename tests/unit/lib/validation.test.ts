@@ -11,6 +11,7 @@ import {
   invitationSchema,
   invitationTokenSchema,
   organizationSchema,
+  organizationSettingsSchema,
 } from "@/lib/validation/organization";
 
 describe("auth schemas", () => {
@@ -78,6 +79,27 @@ describe("organization schemas", () => {
     expect(organizationSchema.safeParse({ name: "   " }).success).toBe(false);
     expect(
       organizationSchema.safeParse({ name: "x".repeat(101) }).success,
+    ).toBe(false);
+  });
+
+  it("takes an optional contact email for candidates", () => {
+    expect(
+      organizationSettingsSchema.parse({
+        name: "Pisos Centro",
+        contactEmail: " Privacidad@Example.com ",
+      }).contactEmail,
+    ).toBe("privacidad@example.com");
+    expect(
+      organizationSettingsSchema.parse({
+        name: "Pisos Centro",
+        contactEmail: "",
+      }).contactEmail,
+    ).toBeNull();
+    expect(
+      organizationSettingsSchema.safeParse({
+        name: "Pisos Centro",
+        contactEmail: "nope",
+      }).success,
     ).toBe(false);
   });
 
