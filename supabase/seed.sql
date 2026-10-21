@@ -58,3 +58,38 @@ values
   ('aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa', '11111111-1111-4111-8111-111111111111', 'owner'),
   ('aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa', '22222222-2222-4222-8222-222222222222', 'staff'),
   ('bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb', '33333333-3333-4333-8333-333333333333', 'owner');
+
+-- Properties and rooms (milestone 2). Dates are relative to the day of the
+-- reset, so the board always shows every state: free, free from a date,
+-- freeing up soon, occupied, overdue and unavailable.
+insert into public.properties (id, org_id, name, address, city, region, total_rent_reference_cents)
+values
+  ('a1a1a1a1-0000-4000-8000-000000000001', 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa',
+   'Piso Calle Ficticia', 'Calle Ficticia 12, 3.º B', 'Madrid', 'ES-MD', 180000),
+  ('a1a1a1a1-0000-4000-8000-000000000002', 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa',
+   'Piso Avenida Inventada', 'Avenida Inventada 7, 1.º', 'Pamplona', 'ES-NC', null),
+  ('b1b1b1b1-0000-4000-8000-000000000001', 'bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb',
+   'Piso Plaza Imaginaria', 'Plaza Imaginaria 3, 2.º A', 'Sevilla', 'ES-AN', null);
+
+insert into public.rooms (
+  org_id, property_id, name, price_cents, deposit_cents, size_m2, features, status, available_from
+)
+values
+  ('aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa', 'a1a1a1a1-0000-4000-8000-000000000001',
+   'Habitación 1', 45000, 45000, 12.0, '{"exterior": true, "desk": true}', 'vacant', null),
+  ('aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa', 'a1a1a1a1-0000-4000-8000-000000000001',
+   'Habitación 2', 48000, 48000, 14.5, '{"balcony": true, "double_bed": true}', 'occupied', current_date + 20),
+  ('aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa', 'a1a1a1a1-0000-4000-8000-000000000001',
+   'Habitación 3', 42000, 42000, 10.0, '{}', 'occupied', null),
+  ('aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa', 'a1a1a1a1-0000-4000-8000-000000000001',
+   'Habitación 4', 39000, null, 8.5, '{}', 'unavailable', null),
+  ('aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa', 'a1a1a1a1-0000-4000-8000-000000000002',
+   'Habitación A', 40000, 80000, 11.0, '{"private_bathroom": true, "bills_included": true}', 'vacant', current_date + 45),
+  ('aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa', 'a1a1a1a1-0000-4000-8000-000000000002',
+   'Habitación B', 38000, 76000, 9.0, '{"bills_included": true}', 'occupied', current_date - 3),
+  ('aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa', 'a1a1a1a1-0000-4000-8000-000000000002',
+   'Habitación C', 41000, 82000, 10.5, '{"bills_included": true, "heating": true}', 'occupied', current_date + 90),
+  ('bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb', 'b1b1b1b1-0000-4000-8000-000000000001',
+   'Habitación Sur 1', 35000, 35000, 10.0, '{"air_conditioning": true}', 'vacant', null),
+  ('bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb', 'b1b1b1b1-0000-4000-8000-000000000001',
+   'Habitación Sur 2', 36000, 36000, 11.0, '{"air_conditioning": true}', 'occupied', current_date + 10);

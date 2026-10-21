@@ -158,4 +158,58 @@ begin
 end;
 $$;
 
+-- Properties and rooms (milestone 2). Names are unique across the fixture.
+create function tests.create_property(org_name text, property_name text)
+returns uuid
+language sql
+as $$
+  insert into public.properties (org_id, name, address, city, region)
+  values (tests.org_id(org_name), property_name, 'Calle Ficticia 1', 'Madrid', 'ES-MD')
+  returning id;
+$$;
+
+create function tests.property_id(property_name text)
+returns uuid
+language sql
+stable
+security definer
+set search_path = ''
+as $$
+  select id from public.properties where name = property_name;
+$$;
+
+create function tests.create_room(property_name text, room_name text)
+returns uuid
+language sql
+as $$
+  insert into public.rooms (org_id, property_id, name, price_cents)
+  select p.org_id, p.id, room_name, 45000
+  from public.properties p
+  where p.id = tests.property_id(property_name)
+  returning id;
+$$;
+
+create function tests.room_id(room_name text)
+returns uuid
+language sql
+stable
+security definer
+set search_path = ''
+as $$
+  select id from public.rooms where name = room_name;
+$$;
+
+-- A valid object name in the photos bucket for a property.
+create function tests.photo_path(property_name text)
+returns text
+language sql
+stable
+security definer
+set search_path = ''
+as $$
+  select p.org_id::text || '/' || p.id::text || '/' || gen_random_uuid()::text || '.jpg'
+  from public.properties p
+  where p.name = property_name;
+$$;
+
 grant execute on all functions in schema tests to anon, authenticated;
