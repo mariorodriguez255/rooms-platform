@@ -505,8 +505,8 @@ export type Database = {
           answers: Json;
           candidate_email: string;
           candidate_name: string;
-          candidate_phone: string;
-          client_ip_hash: string;
+          candidate_phone?: string;
+          client_ip_hash?: string;
           consent_version: string;
           room_token: string;
         };

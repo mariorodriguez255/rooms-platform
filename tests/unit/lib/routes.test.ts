@@ -14,6 +14,11 @@ describe("routeAccess", () => {
     expect(routeAccess("/auth/confirm")).toBe("open");
   });
 
+  it("leaves the public application form open to candidates", () => {
+    expect(routeAccess("/apply/a1000000000000000000000000000001")).toBe("open"); // secret-scan:allow (seed token)
+    expect(routeAccess("/applications/123")).toBe("protected");
+  });
+
   it.each([
     "/dashboard",
     "/onboarding",

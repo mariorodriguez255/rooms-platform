@@ -260,10 +260,11 @@ create function public.submit_application(
   room_token text,
   candidate_email text,
   candidate_name text,
-  candidate_phone text,
   answers jsonb,
   consent_version text,
-  client_ip_hash text
+  candidate_phone text default null,
+  -- Null when the IP is unknown: then only the per-email limit applies.
+  client_ip_hash text default null
 )
 returns table (application_id uuid, is_new boolean)
 language plpgsql
@@ -322,10 +323,10 @@ end;
 $$;
 
 revoke all on function public.get_public_room(text) from public, anon, authenticated;
-revoke all on function public.submit_application(text, text, text, text, jsonb, text, text)
+revoke all on function public.submit_application(text, text, text, jsonb, text, text, text)
   from public, anon, authenticated;
 grant execute on function public.get_public_room(text) to service_role;
-grant execute on function public.submit_application(text, text, text, text, jsonb, text, text)
+grant execute on function public.submit_application(text, text, text, jsonb, text, text, text)
   to service_role;
 
 -- =====================================================================

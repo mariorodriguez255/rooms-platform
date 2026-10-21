@@ -13,8 +13,9 @@ const GUEST_ONLY_PATHS = new Set([
   "/forgot-password",
 ]);
 
-// Reachable with or without a session (email links land here).
-const OPEN_PREFIXES = ["/auth/"];
+// Reachable with or without a session: email links land on /auth/, and
+// candidates apply on /apply/ without an account (milestone 3).
+const OPEN_PREFIXES = ["/auth/", "/apply/"];
 
 export type RouteAccess = "guest-only" | "open" | "protected";
 

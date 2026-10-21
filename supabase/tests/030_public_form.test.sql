@@ -29,7 +29,7 @@ select throws_ok(
   'anon cannot read a room through the public function'
 );
 select throws_ok(
-  $$select * from public.submit_application(tests.room_token('Hab A1'), 'x@example.org', 'X', null, tests.answers(), 'v1', null)$$,
+  $$select * from public.submit_application(tests.room_token('Hab A1'), 'x@example.org', 'X', tests.answers(), 'v1', null, null)$$,
   '42501', null,
   'anon cannot submit an application directly'
 );
@@ -41,7 +41,7 @@ select throws_ok(
   'signed-in users cannot call the public functions either'
 );
 select throws_ok(
-  $$select * from public.submit_application(tests.room_token('Hab A1'), 'x@example.org', 'X', null, tests.answers(), 'v1', null)$$,
+  $$select * from public.submit_application(tests.room_token('Hab A1'), 'x@example.org', 'X', tests.answers(), 'v1', null, null)$$,
   '42501', null,
   'signed-in users cannot submit directly'
 );
@@ -88,25 +88,25 @@ select results_eq(
 -- Submitting
 -- ---------------------------------------------------------------------
 select throws_ok(
-  $$select * from public.submit_application(repeat('0', 32), 'x@example.org', 'X', null, tests.answers(), 'v1', null)$$,
+  $$select * from public.submit_application(repeat('0', 32), 'x@example.org', 'X', tests.answers(), 'v1', null, null)$$,
   'P0001', 'room_not_found',
   'an unknown token is rejected'
 );
 select throws_ok(
-  $$select * from public.submit_application(tests.room_token('Hab A2'), 'x@example.org', 'X', null, tests.answers(), 'v1', null)$$,
+  $$select * from public.submit_application(tests.room_token('Hab A2'), 'x@example.org', 'X', tests.answers(), 'v1', null, null)$$,
   'P0001', 'room_closed',
   'an unavailable room is rejected'
 );
 select throws_ok(
-  $$select * from public.submit_application(tests.room_token('Hab B1'), 'x@example.org', 'X', null, tests.answers(), 'v1', null)$$,
+  $$select * from public.submit_application(tests.room_token('Hab B1'), 'x@example.org', 'X', tests.answers(), 'v1', null, null)$$,
   'P0001', 'room_closed',
   'an organization without contact email is rejected'
 );
 
 select results_eq(
   $$select is_new from public.submit_application(
-      tests.room_token('Hab A1'), '  Elena@Example.org ', 'Elena Candidata', '600000000',
-      tests.answers(), '2026-10-21', current_setting('tests.ip'))$$,
+      tests.room_token('Hab A1'), '  Elena@Example.org ', 'Elena Candidata',
+      tests.answers(), '2026-10-21', '600000000', current_setting('tests.ip'))$$,
   array[true],
   'a candidate applies'
 );
@@ -132,15 +132,15 @@ select results_eq(
 select tests.authenticate_as_service();
 select results_eq(
   $$select is_new from public.submit_application(
-      tests.room_token('Hab A1'), 'elena@example.org', 'Elena C.', null,
-      tests.answers('{"occupation": "student"}'), '2026-10-21', current_setting('tests.ip'))$$,
+      tests.room_token('Hab A1'), 'elena@example.org', 'Elena C.',
+      tests.answers('{"occupation": "student"}'), '2026-10-21', null, current_setting('tests.ip'))$$,
   array[false],
   'applying again to the same room updates the application'
 );
 select results_eq(
   $$select is_new from public.submit_application(
-      tests.room_token('Hab A3'), 'elena@example.org', 'Elena C.', null,
-      tests.answers(), '2026-10-21', current_setting('tests.ip'))$$,
+      tests.room_token('Hab A3'), 'elena@example.org', 'Elena C.',
+      tests.answers(), '2026-10-21', null, current_setting('tests.ip'))$$,
   array[true],
   'the same person can apply to another room'
 );
@@ -160,14 +160,14 @@ select results_eq(
 -- Constraints behind the app's own validation.
 select tests.authenticate_as_service();
 select throws_ok(
-  $$select * from public.submit_application(tests.room_token('Hab A1'), 'f@example.org', 'F', null,
-      tests.answers('{"nationality": "x"}'), 'v1', null)$$,
+  $$select * from public.submit_application(tests.room_token('Hab A1'), 'f@example.org', 'F',
+      tests.answers('{"nationality": "x"}'), 'v1', null, null)$$,
   '23514', null,
   'answers outside the allow-list are rejected'
 );
 select throws_ok(
-  $$select * from public.submit_application(tests.room_token('Hab A1'), 'f@example.org', 'F', null,
-      tests.answers(), 'v1', '192.168.1.1')$$,
+  $$select * from public.submit_application(tests.room_token('Hab A1'), 'f@example.org', 'F',
+      tests.answers(), 'v1', null, '192.168.1.1')$$,
   '23514', null,
   'a raw IP is never stored: only a hash'
 );
@@ -178,31 +178,31 @@ select throws_ok(
 -- ---------------------------------------------------------------------
 -- Elena used this IP 3 times; two more fit in 10 minutes.
 select lives_ok(
-  $$select * from public.submit_application(tests.room_token('Hab A1'), 'g1@example.org', 'G', null, tests.answers(), 'v1', current_setting('tests.ip'));
-    select * from public.submit_application(tests.room_token('Hab A1'), 'g2@example.org', 'G', null, tests.answers(), 'v1', current_setting('tests.ip'))$$,
+  $$select * from public.submit_application(tests.room_token('Hab A1'), 'g1@example.org', 'G', tests.answers(), 'v1', null, current_setting('tests.ip'));
+    select * from public.submit_application(tests.room_token('Hab A1'), 'g2@example.org', 'G', tests.answers(), 'v1', null, current_setting('tests.ip'))$$,
   'up to 5 submissions per IP in 10 minutes'
 );
 select throws_ok(
-  $$select * from public.submit_application(tests.room_token('Hab A1'), 'g3@example.org', 'G', null, tests.answers(), 'v1', current_setting('tests.ip'))$$,
+  $$select * from public.submit_application(tests.room_token('Hab A1'), 'g3@example.org', 'G', tests.answers(), 'v1', null, current_setting('tests.ip'))$$,
   'P0001', 'rate_limited',
   'the 6th submission from the same IP is rejected'
 );
 select lives_ok(
-  $$select * from public.submit_application(tests.room_token('Hab A1'), 'g3@example.org', 'G', null, tests.answers(), 'v1', repeat('b', 64))$$,
+  $$select * from public.submit_application(tests.room_token('Hab A1'), 'g3@example.org', 'G', tests.answers(), 'v1', null, repeat('b', 64))$$,
   'another IP can still apply'
 );
 
 -- Per email: 5 a day, whatever the IP.
 select lives_ok(
-  $$select * from public.submit_application(tests.room_token('Hab A1'), 'h@example.org', 'H', null, tests.answers(), 'v1', null);
-    select * from public.submit_application(tests.room_token('Hab A1'), 'h@example.org', 'H', null, tests.answers(), 'v1', null);
-    select * from public.submit_application(tests.room_token('Hab A1'), 'h@example.org', 'H', null, tests.answers(), 'v1', null);
-    select * from public.submit_application(tests.room_token('Hab A1'), 'h@example.org', 'H', null, tests.answers(), 'v1', null);
-    select * from public.submit_application(tests.room_token('Hab A1'), 'H@example.org', 'H', null, tests.answers(), 'v1', null)$$,
+  $$select * from public.submit_application(tests.room_token('Hab A1'), 'h@example.org', 'H', tests.answers(), 'v1', null, null);
+    select * from public.submit_application(tests.room_token('Hab A1'), 'h@example.org', 'H', tests.answers(), 'v1', null, null);
+    select * from public.submit_application(tests.room_token('Hab A1'), 'h@example.org', 'H', tests.answers(), 'v1', null, null);
+    select * from public.submit_application(tests.room_token('Hab A1'), 'h@example.org', 'H', tests.answers(), 'v1', null, null);
+    select * from public.submit_application(tests.room_token('Hab A1'), 'H@example.org', 'H', tests.answers(), 'v1', null, null)$$,
   'up to 5 submissions per email in a day'
 );
 select throws_ok(
-  $$select * from public.submit_application(tests.room_token('Hab A1'), 'h@example.org', 'H', null, tests.answers(), 'v1', null)$$,
+  $$select * from public.submit_application(tests.room_token('Hab A1'), 'h@example.org', 'H', tests.answers(), 'v1', null, null)$$,
   'P0001', 'rate_limited',
   'the 6th submission with the same email is rejected'
 );
