@@ -8,7 +8,7 @@ Leyenda: ⬜ pendiente · 🟡 en curso · ✅ hecho
 | ------------------------------------ | --------------------------------- | ---------------------------------------------------------------------------------- |
 | 0 — Cimientos                        | ✅ Hecho (2026-10-20, PR #1)      | El proyecto arranca en local, los tests pasan y hay un despliegue de vista previa  |
 | 1 — Cuentas y organizaciones         | ✅ Hecho (2026-10-20, PR #5 y #6) | Dos organizaciones de prueba no pueden ver datos la una de la otra                 |
-| 2 — Pisos y habitaciones             | 🟡 En revisión                    | El operador ve el estado de todas sus habitaciones en una pantalla                 |
+| 2 — Pisos y habitaciones             | ✅ Hecho (2026-10-21, PR #7)      | El operador ve el estado de todas sus habitaciones en una pantalla                 |
 | 3 — Formulario del candidato         | ⬜ Pendiente                      | Un candidato puede postularse desde el móvil sin registrarse                       |
 | 4 — Puntuación y pipeline            | ⬜ Pendiente                      | El operador ve un ranking explicado y puede aceptar a un candidato                 |
 | 5 — Bandeja de leads por email       | ⬜ Pendiente                      | Un aviso reenviado de idealista crea un lead y envía el formulario automáticamente |
@@ -149,12 +149,13 @@ Decisiones (además de los ADR 0008 y 0009):
 
 Cierre del hito:
 
-- [ ] CI en verde en el PR.
-- [ ] Mario: revisar la vista previa de Vercel. Incluye subir fotos desde el móvil, idealmente un iPhone, para ver cómo llegan las fotos HEIC.
+- [x] CI en verde en el PR #7 (formato, lint, tipos, unitarios, pgTAP, integración, e2e, build y gitleaks). El primer intento falló porque la CI no arrancaba Storage (ver decisiones).
+- [x] Mario: vista previa de Vercel revisada y funcionando.
 - [x] Migraciones aplicadas en la nube (`supabase db push`, que también crea el bucket) y pgTAP contra la nube (`supabase test db --linked`): 170/170 en verde, incluidas las políticas de Storage.
 
 Pendiente para hitos posteriores:
 
+- Comprobar en un iPhone real la subida de fotos HEIC, si no se hizo en la revisión (si el navegador no puede leerlas se muestra un error, ver ADR 0009).
 - Hito 3: el formulario público mostrará las fotos con URLs firmadas generadas en el servidor; una habitación con candidaturas no se podrá borrar (solo marcar como no disponible). Añadir `rooms.public_token`.
 - Hito 6: características del piso (ascensor, wifi…) y orden de las fotos.
 - Hito 7: limpieza de archivos huérfanos si alguna vez falla un borrado en Storage. Con el plan Free (1 GB de Storage, 5 GB de transferencia al mes) basta para desarrollo; el piloto irá en Supabase Pro.
