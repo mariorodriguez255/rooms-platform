@@ -167,7 +167,11 @@
     "photoLimit": "Ya hay 20 fotos aquí, el máximo. Borra alguna antes de subir más.",
     "propertyNameTaken": "Ya tienes un piso con ese nombre.",
     "roomNameTaken": "Este piso ya tiene una habitación con ese nombre.",
-    "photoInvalid": "Esa foto no se ha podido subir. Prueba con otra en JPG o PNG."
+    "photoInvalid": "Esa foto no se ha podido subir. Prueba con otra en JPG o PNG.",
+    "applicationClosed": "Esta habitación ya no admite candidaturas.",
+    "applicationLinkInvalid": "Este enlace ya no funciona. Pide uno nuevo a quien te lo envió.",
+    "roomHasApplications": "Esta habitación tiene candidaturas y no se puede borrar. Márcala como No disponible.",
+    "propertyHasApplications": "Alguna habitación de este piso tiene candidaturas y no se puede borrar. Márcalas como No disponibles."
   },
   "validation": {
     "required": "Este campo es obligatorio.",
@@ -184,7 +188,14 @@
     "dateInvalid": "Escribe una fecha válida.",
     "regionInvalid": "Elige una comunidad autónoma.",
     "statusInvalid": "Elige un estado.",
-    "featureInvalid": "Elige características de la lista."
+    "featureInvalid": "Elige características de la lista.",
+    "phoneInvalid": "Escribe un teléfono válido, por ejemplo 600 123 456.",
+    "moveInDateRange": "Elige una fecha entre hoy y dentro de un año.",
+    "chooseOption": "Elige una opción.",
+    "incomeInvalid": "Escribe una cantidad en euros, sin decimales.",
+    "introductionTooLong": "Máximo 1000 caracteres.",
+    "adultRequired": "Tienes que ser mayor de edad para postularte.",
+    "consentRequired": "Necesitamos tu consentimiento para gestionar la candidatura."
   },
   "roomState": {
     "free": "Libre",
@@ -299,5 +310,111 @@
     "deleteDescription": "No se puede deshacer.",
     "alt": "Foto {index} de {name}",
     "unreadable": "No hemos podido abrir «{file}». Prueba con una foto JPG o PNG."
+  },
+  "apply": {
+    "title": "Solicitar habitación",
+    "notFoundTitle": "Este enlace no funciona",
+    "notFound": "Puede que esté incompleto o que lo hayan cambiado. Pide un enlace nuevo a quien te lo envió.",
+    "closedTitle": "Esta habitación no admite candidaturas ahora",
+    "closed": "Si te interesa, escribe a quien te envió el enlace.",
+    "place": "{city}, {region}",
+    "price": "{amount}/mes",
+    "deposit": "Fianza: {amount}",
+    "size": "{size} m²",
+    "availableNow": "Disponible ya",
+    "availableFrom": "Disponible desde el {date}",
+    "managedBy": "Gestiona: {organization}",
+    "photoAlt": "Foto {index} de {room}",
+    "formTitle": "Tu candidatura",
+    "formIntro": "Son unos 3 minutos y no hace falta registrarse.",
+    "sections": {
+      "contact": "Tus datos",
+      "stay": "Tu estancia",
+      "life": "Tu día a día",
+      "habits": "Convivencia",
+      "about": "Sobre ti",
+      "privacy": "Protección de datos"
+    },
+    "name": "Nombre",
+    "email": "Email",
+    "phone": "Teléfono (opcional)",
+    "submit": "Enviar candidatura",
+    "sentTitle": "Candidatura enviada",
+    "sent": "Gracias, {name}. {organization} ha recibido tu candidatura y te escribirá si encaja. Te hemos enviado un email de confirmación a {email}."
+  },
+  "questionnaire": {
+    "move_in_date": "¿Desde qué fecha quieres entrar?",
+    "stay_months": "¿Cuánto tiempo piensas quedarte?",
+    "stayMonths": "{months, plural, one {# mes} other {# meses}}",
+    "stayMonthsMax": "2 años o más",
+    "choose": "Elige una opción",
+    "occupation": "¿A qué te dedicas?",
+    "occupations": {
+      "student": "Estudio",
+      "worker": "Trabajo",
+      "student_worker": "Estudio y trabajo",
+      "other": "Otra situación"
+    },
+    "monthly_income": "Ingresos netos mensuales aproximados (€, opcional)",
+    "monthlyIncomeHelp": "Solo sirven para ver si la renta encaja con tus ingresos. Si lo dejas en blanco, no cuenta en tu contra.",
+    "schedule": "Horario habitual",
+    "schedules": {
+      "morning": "Mañanas",
+      "afternoon": "Tardes",
+      "night": "Noches o turnos",
+      "variable": "Variable"
+    },
+    "remote_work": "¿Teletrabajas o estudias desde casa?",
+    "remoteWork": {
+      "no": "No",
+      "sometimes": "Algunos días",
+      "mostly": "Casi siempre"
+    },
+    "habitsHelp": "Del 1 al 5. No hay respuestas buenas ni malas: sirven para encajar con quienes ya viven en el piso.",
+    "habits": {
+      "cleanliness": {
+        "label": "Orden y limpieza en zonas comunes",
+        "min": "Relajado",
+        "max": "Muy exigente"
+      },
+      "noise": {
+        "label": "Ruido y música en casa",
+        "min": "Muy tranquilo",
+        "max": "Animado"
+      },
+      "visits": {
+        "label": "Visitas en casa",
+        "min": "Casi nunca",
+        "max": "Muy a menudo"
+      },
+      "common_areas": {
+        "label": "Uso del salón y la cocina",
+        "min": "Poco",
+        "max": "Mucho"
+      }
+    },
+    "smoking": "¿Fumas?",
+    "smokingOptions": {
+      "no": "No",
+      "outside": "Solo fuera de casa",
+      "yes": "Sí"
+    },
+    "pets": "¿Tienes mascota?",
+    "yes": "Sí",
+    "no": "No",
+    "introduction": "Preséntate (opcional)",
+    "introductionHelp": "Cuéntanos lo que quieras sobre ti y lo que buscas. No incluyas datos como nacionalidad, religión o salud: no hacen falta."
+  },
+  "consent": {
+    "2026-10-21": {
+      "controller": "Responsable: {organization}, que gestiona el alquiler de esta habitación.",
+      "purpose": "Finalidad: valorar tu candidatura para esta habitación y contactarte sobre ella.",
+      "legalBasis": "Legitimación: tu consentimiento, que puedes retirar cuando quieras.",
+      "processor": "Encargado del tratamiento: rooms-platform, la herramienta con la que {organization} gestiona las candidaturas. Tus datos se guardan en la Unión Europea; los emails se envían con un proveedor que puede tratarlos en Estados Unidos con las garantías del RGPD.",
+      "retention": "Conservación: mientras dure la selección. Si no te eligen, tus datos se borran en un máximo de 30 días.",
+      "rights": "Derechos: puedes acceder a tus datos, rectificarlos o suprimirlos y retirar tu consentimiento escribiendo a {email}. También puedes reclamar ante la Agencia Española de Protección de Datos (aepd.es).",
+      "checkbox": "He leído la información sobre protección de datos y acepto que {organization} trate mis datos para gestionar mi candidatura.",
+      "adult": "Soy mayor de edad."
+    }
   }
 }
