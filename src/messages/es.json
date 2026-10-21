@@ -416,5 +416,21 @@
       "checkbox": "He leído la información sobre protección de datos y acepto que {organization} trate mis datos para gestionar mi candidatura.",
       "adult": "Soy mayor de edad."
     }
+  },
+  "emails": {
+    "candidate": {
+      "subject": "Hemos recibido tu candidatura: {room}, {city}",
+      "greeting": "Hola, {name}:",
+      "body": "{organization} ha recibido tu candidatura para la habitación «{room}» en {city}. Si encaja, te escribirá para concertar una visita.",
+      "update": "Si quieres cambiar algo, vuelve a enviar el formulario con este mismo email: sustituirá tus respuestas.",
+      "privacy": "Para cualquier consulta sobre tus datos, escribe a {email}.",
+      "signature": "Un saludo, {organization}"
+    },
+    "newApplication": {
+      "subject": "Nueva candidatura de {name} para {room}",
+      "body": "{name} se ha postulado a «{room}» ({property}).",
+      "cta": "Ver la candidatura",
+      "footer": "Recibes este aviso porque eres miembro de {organization} en rooms-platform."
+    }
   }
 }
