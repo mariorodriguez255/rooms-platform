@@ -22,3 +22,14 @@ export function centsToInput(cents: number | null): string {
 export function centsToEuros(cents: number): number {
   return cents / 100;
 }
+
+// Intl options to show an amount: "450 €" when it is whole euros,
+// "450,50 €" otherwise. Pass the euros (centsToEuros) to the formatter.
+// (Return type inferred: next-intl's options type is narrower than Intl's.)
+export function euroFormatOptions(cents: number) {
+  return {
+    style: "currency",
+    currency: "EUR",
+    minimumFractionDigits: cents % 100 === 0 ? 0 : 2,
+  } as const;
+}

@@ -1,6 +1,12 @@
 import { describe, expect, it } from "vitest";
 
-import { centsToInput, MAX_AMOUNT_CENTS, parseEuros } from "@/lib/money";
+import {
+  centsToEuros,
+  centsToInput,
+  euroFormatOptions,
+  MAX_AMOUNT_CENTS,
+  parseEuros,
+} from "@/lib/money";
 import { formatDecimalInput, parseDecimal } from "@/lib/numbers";
 
 describe("parseEuros", () => {
@@ -53,6 +59,19 @@ describe("centsToInput", () => {
     for (const cents of [1, 99, 100, 45050, MAX_AMOUNT_CENTS]) {
       expect(parseEuros(centsToInput(cents))).toBe(cents);
     }
+  });
+});
+
+describe("euroFormatOptions", () => {
+  it("shows decimals only when the amount has cents", () => {
+    const euros = (cents: number) =>
+      new Intl.NumberFormat("es", euroFormatOptions(cents)).format(
+        centsToEuros(cents),
+      );
+    // Intl separates the € sign with a no-break space.
+    expect(euros(45000)).toBe("450 €");
+    expect(euros(45050)).toBe("450,50 €");
+    expect(euros(5)).toBe("0,05 €");
   });
 });
 

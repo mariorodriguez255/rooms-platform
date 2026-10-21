@@ -234,6 +234,8 @@
   },
   "properties": {
     "title": "Pisos",
+    "detailTitle": "Piso",
+    "backToList": "Pisos",
     "description": "Los pisos que alquilas por habitaciones.",
     "empty": "Todavía no has dado de alta ningún piso.",
     "add": "Añadir piso",
@@ -262,6 +264,7 @@
     "notFound": "No encontramos este piso. Puede que lo hayan borrado."
   },
   "rooms": {
+    "title": "Habitación",
     "newTitle": "Nueva habitación",
     "editTitle": "Editar {name}",
     "inProperty": "En {property}",
