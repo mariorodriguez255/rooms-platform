@@ -61,6 +61,8 @@ jobs:
         run: pnpm exec supabase start -x realtime,imgproxy,postgres-meta,studio,edge-runtime,logflare,vector,supavisor
       # The local keys are the same fixed development values in every Supabase
       # installation: they are not secrets and only work against this runner.
+      # The app's emails go to Mailpit too (EMAIL_PROVIDER=mailpit), and the
+      # IP hash key is random for each run.
       - name: Expose the local Supabase settings
         run: |
           eval "$(pnpm exec supabase status -o env 2>/dev/null)"
@@ -69,6 +71,9 @@ jobs:
             echo "NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=$PUBLISHABLE_KEY"
             echo "SUPABASE_SECRET_KEY=$SECRET_KEY"
             echo "MAILPIT_URL=$MAILPIT_URL"
+            echo "EMAIL_PROVIDER=mailpit"
+            echo "EMAIL_FROM=rooms-platform <avisos@example.com>"
+            echo "IP_HASH_SECRET=$(openssl rand -hex 32)"
           } >> "$GITHUB_ENV"
       - name: RLS and database tests (pgTAP)
         run: pnpm db:test

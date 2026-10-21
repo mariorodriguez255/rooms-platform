@@ -9,7 +9,7 @@ Leyenda: ⬜ pendiente · 🟡 en curso · ✅ hecho
 | 0 — Cimientos                        | ✅ Hecho (2026-10-20, PR #1)      | El proyecto arranca en local, los tests pasan y hay un despliegue de vista previa  |
 | 1 — Cuentas y organizaciones         | ✅ Hecho (2026-10-20, PR #5 y #6) | Dos organizaciones de prueba no pueden ver datos la una de la otra                 |
 | 2 — Pisos y habitaciones             | ✅ Hecho (2026-10-21, PR #7)      | El operador ve el estado de todas sus habitaciones en una pantalla                 |
-| 3 — Formulario del candidato         | ⬜ Pendiente                      | Un candidato puede postularse desde el móvil sin registrarse                       |
+| 3 — Formulario del candidato         | 🟡 En revisión                    | Un candidato puede postularse desde el móvil sin registrarse                       |
 | 4 — Puntuación y pipeline            | ⬜ Pendiente                      | El operador ve un ranking explicado y puede aceptar a un candidato                 |
 | 5 — Bandeja de leads por email       | ⬜ Pendiente                      | Un aviso reenviado de idealista crea un lead y envía el formulario automáticamente |
 | 6 — Paquete de anuncio               | ⬜ Pendiente                      | Publicar una habitación en tres portales lleva menos de cinco minutos              |
@@ -159,3 +159,44 @@ Pendiente para hitos posteriores:
 - Hito 3: el formulario público mostrará las fotos con URLs firmadas generadas en el servidor; una habitación con candidaturas no se podrá borrar (solo marcar como no disponible). Añadir `rooms.public_token`.
 - Hito 6: características del piso (ascensor, wifi…) y orden de las fotos.
 - Hito 7: limpieza de archivos huérfanos si alguna vez falla un borrado en Storage. Con el plan Free (1 GB de Storage, 5 GB de transferencia al mes) basta para desarrollo; el piloto irá en Supabase Pro.
+
+### 2026-10-21 — Hito 3: Formulario del candidato
+
+Plan aprobado por Mario: email con **Resend** (como propone el briefing; se valoró Brevo por tener los datos en la UE). Todavía **no hay dominio**. Resto, según lo recomendado: sin subida de documentos, sin dirección exacta en el formulario, email de contacto obligatorio para admitir candidaturas, lista de candidaturas de solo lectura, avisos a todos los miembros, cuestionario propuesto (con «Otra situación») y texto de consentimiento provisional.
+
+Hecho (rama `feat/hito-3`):
+
+- **Base de datos** (`…_applications.sql`): `candidates`, `applications` y `consents` con RLS (los miembros leen, nadie escribe desde la API); `rooms.public_token` y `rotate_room_token`; `organizations.contact_email`; funciones `get_public_room` y `submit_application` solo para `service_role`; límite de envíos por IP y por email en `private`; lista de permitidos de las respuestas también en la base de datos; una habitación con candidaturas ya no se puede borrar (ADR 0010).
+- **Formulario público** `/apply/[token]`: pensado para el móvil, sin cuenta, con la habitación (sin dirección), fotos, cuestionario, primera capa de información de protección de datos, casillas de mayoría de edad y consentimiento, y campo trampa. La acción del servidor valida con la lista de permitidos y llama a la función con la clave secreta.
+- **Emails** con la interfaz `EmailSender` (Resend, Mailpit o desactivado): confirmación al candidato (las respuestas van al operador) y aviso a los miembros con enlace y sin respuestas, enviados después de responder (ADR 0011).
+- **Operador:** enlace para candidatos en la ficha de la habitación (copiar, abrir, generar uno nuevo, avisos de por qué está cerrado), lista de candidaturas, ficha de cada candidatura (contacto, respuestas y consentimientos) y email de contacto en Ajustes → Organización.
+- **Seed** con emails de contacto, dos enlaces fijos (ver README) y dos candidaturas ficticias.
+- **Tests:** 204 de pgTAP (34 nuevos), 20 de integración (6 nuevos), 142 unitarios y 19 e2e × 2 (6 nuevos, entre ellos el «hecho cuando» en móvil). Se comprobó que fallan al dar permiso a `anon` sobre el envío y al quitar el `check` de la lista de permitidos. Build de producción correcto.
+
+Decisiones (además de los ADR 0010 y 0011):
+
+- **El teléfono y el hash de la IP son parámetros opcionales** al final de `submit_application`, para que los tipos generados no obliguen a pasar valores falsos.
+- **Las validaciones numéricas devuelven claves traducibles:** un test detectó que Zod devolvía su mensaje interno en inglés con un valor no numérico.
+- **Los tests pgTAP filtran por las organizaciones del test**, porque el seed ya trae candidaturas (ADR 0007: los tests no dependen del seed).
+- **En los e2e cada test se postula desde su propia IP** (cabecera `X-Forwarded-For`), para no chocar con el límite de 5 envíos. En Vercel esa cabecera no se puede falsificar.
+- **La CI usa Mailpit para los emails de la app** y genera un `IP_HASH_SECRET` aleatorio en cada ejecución.
+- **Falsos positivos del hook de secretos:** los tokens ficticios del seed, marcados con `secret-scan:allow`.
+
+Cierre del hito:
+
+- [ ] CI en verde en el PR.
+- [ ] Mario: variables en Vercel (Production y Preview), y volver a desplegar:
+  - `SUPABASE_SECRET_KEY` (Sensitive; Supabase → Project Settings → API Keys → secret).
+  - `IP_HASH_SECRET` (Sensitive; `openssl rand -hex 32`).
+  - `EMAIL_PROVIDER=resend` y `EMAIL_FROM=rooms-platform <onboarding@resend.dev>`.
+  - `RESEND_API_KEY` (Sensitive), de una cuenta de Resend con tu email. Sin dominio, Resend solo entrega a ese email.
+  - Alternativa sin emails: `EMAIL_PROVIDER=disabled`.
+- [ ] Mario: `supabase db push` (la migración) y `supabase test db --linked`.
+- [ ] Mario: en la vista previa, poner el email de contacto en Ajustes, abrir el enlace de una habitación desde el móvil y postularse con tu email.
+
+Pendiente para hitos posteriores:
+
+- **Dominio propio:** con él, `EMAIL_FROM` con ese dominio, el SMTP de Supabase Auth con Resend y las plantillas en español (`supabase/templates/`). Hasta entonces, Auth sigue con el servidor de correo incluido (solo envía al equipo del proyecto).
+- **Hito 4:** etapas, puntuación y decisiones sobre las candidaturas.
+- **Hito 7:** revisión legal del texto de consentimiento y borrado automático de candidatos descartados a los 30 días (el texto ya lo anuncia; tiene que existir antes del piloto).
+- **Si aparece spam:** verificación del email del candidato o captcha (ADR 0010).
