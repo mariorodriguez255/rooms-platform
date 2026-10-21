@@ -145,12 +145,13 @@ Decisiones (además de los ADR 0008 y 0009):
 - **Sin columna de posición en las fotos**: se ordenan por fecha de subida. La propuse en el plan, pero sin poder reordenar no aportaba nada; llegará con el orden de fotos del Hito 6.
 - **El texto «Estás trabajando en…» se mantiene** encima del tablero: con varias organizaciones ayuda a saber cuál se está viendo.
 - Los tests e2e buscan dentro de `<main>` y solo en lo visible: Next mantiene ocultas las páginas anteriores y su anunciador de rutas repite el título anterior.
+- **La CI arranca ahora también Storage** (`storage-api`) en Supabase local: hasta este hito se excluía y los tests de integración de fotos no podían conectar. `imgproxy` sigue fuera (solo sirve transformaciones de imagen, que no usamos).
 
 Cierre del hito:
 
 - [ ] CI en verde en el PR.
 - [ ] Mario: revisar la vista previa de Vercel. Incluye subir fotos desde el móvil, idealmente un iPhone, para ver cómo llegan las fotos HEIC.
-- [ ] Aplicar las dos migraciones en la nube (`pnpm exec supabase db push`, que también crea el bucket) y pasar pgTAP con `supabase test db --linked`.
+- [x] Migraciones aplicadas en la nube (`supabase db push`, que también crea el bucket) y pgTAP contra la nube (`supabase test db --linked`): 170/170 en verde, incluidas las políticas de Storage.
 
 Pendiente para hitos posteriores:
 

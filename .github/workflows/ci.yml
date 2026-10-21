@@ -54,9 +54,11 @@ jobs:
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       # Local Supabase in Docker, applying supabase/migrations and seed.sql.
-      # Only what the app uses today: Postgres, Auth, the REST API and Mailpit.
+      # Only what the app uses today: Postgres, Auth, the REST API, Storage
+      # (photos, milestone 2) and Mailpit. imgproxy only serves image
+      # transformations, which the app does not use (ADR 0009).
       - name: Start local Supabase
-        run: pnpm exec supabase start -x realtime,storage-api,imgproxy,postgres-meta,studio,edge-runtime,logflare,vector,supavisor
+        run: pnpm exec supabase start -x realtime,imgproxy,postgres-meta,studio,edge-runtime,logflare,vector,supavisor
       # The local keys are the same fixed development values in every Supabase
       # installation: they are not secrets and only work against this runner.
       - name: Expose the local Supabase settings
