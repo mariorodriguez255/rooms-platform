@@ -37,6 +37,8 @@ pnpm dev               # http://localhost:3000 (usa localhost, no 127.0.0.1)
 | `bruno@example.com` | Pisos Ejemplo Norte   | Equipo      |
 | `carla@example.com` | Habitaciones Demo Sur | Propietario |
 
+El seed también crea pisos y habitaciones ficticios: dos pisos en «Pisos Ejemplo Norte» (Madrid y Pamplona) y uno en «Habitaciones Demo Sur» (Sevilla). Sus fechas son relativas al día del `db:reset`, para que el tablero muestre siempre todos los estados (libre, libre desde, se libera pronto, ocupada, fecha vencida y no disponible). No incluye fotos.
+
 Para registrar cuentas nuevas, el email de confirmación aparece en Mailpit.
 
 ## Scripts
@@ -63,6 +65,7 @@ La primera vez que ejecutes los tests e2e, instala el navegador: `pnpm exec play
 - Cada cambio de esquema es una migración nueva en `supabase/migrations/` (`pnpm exec supabase migration new <nombre>`). Después: `pnpm db:reset`, `pnpm db:types` y `pnpm db:test`.
 - Toda tabla nueva lleva RLS, `org_id` con índice y su test de aislamiento en `supabase/tests/`. El test `001_schema_invariants` falla si se olvida alguno.
 - El proyecto en la nube se actualiza a mano con `pnpm exec supabase db push` (el seed no se sube nunca).
+- Los buckets de Storage son filas, no esquema: se crean en una migración escrita a mano (ver `…_photos_storage.sql`). Los archivos se borran siempre con la API de Storage, nunca con SQL.
 
 ## Seguridad
 
