@@ -136,6 +136,10 @@ export async function deleteProperty(
     .eq("id", propertyId)
     .eq("org_id", active.orgId)
     .select("id");
+  // 23503: one of its rooms has applications.
+  if (error?.code === "23503") {
+    return { status: "error", error: "propertyHasApplications" };
+  }
   if (error || data.length === 0) {
     return {
       status: "error",

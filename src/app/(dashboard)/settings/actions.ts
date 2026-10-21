@@ -18,7 +18,7 @@ import {
   invitationIdSchema,
   invitationSchema,
   memberIdSchema,
-  organizationSchema,
+  organizationSettingsSchema,
 } from "@/lib/validation/organization";
 
 // Server Actions of the settings pages. They always act on the active
@@ -26,16 +26,16 @@ import {
 // decides whether the user's role allows it: an update or delete that RLS
 // filters out simply affects no rows, which is reported as insufficientRole.
 
-const ORGANIZATION_FIELDS = ["name"] as const;
+const ORGANIZATION_FIELDS = ["name", "contactEmail"] as const;
 export type OrganizationSettingsField = (typeof ORGANIZATION_FIELDS)[number];
 
-export async function renameOrganization(
+export async function updateOrganization(
   _previous: FormState<OrganizationSettingsField>,
   formData: FormData,
 ): Promise<FormState<OrganizationSettingsField>> {
   const active = await getActiveMembership();
   const values = formValues(formData, ORGANIZATION_FIELDS);
-  const parsed = organizationSchema.safeParse(values);
+  const parsed = organizationSettingsSchema.safeParse(values);
   if (!parsed.success) {
     return {
       status: "error",
@@ -47,7 +47,10 @@ export async function renameOrganization(
   const supabase = await createClient();
   const { data, error } = await supabase
     .from("organizations")
-    .update({ name: parsed.data.name })
+    .update({
+      name: parsed.data.name,
+      contact_email: parsed.data.contactEmail,
+    })
     .eq("id", active.orgId)
     .select("id");
   if (error || data.length === 0) {
@@ -59,7 +62,13 @@ export async function renameOrganization(
   }
 
   refresh();
-  return { status: "success", values: { name: parsed.data.name } };
+  return {
+    status: "success",
+    values: {
+      name: parsed.data.name,
+      contactEmail: parsed.data.contactEmail ?? "",
+    },
+  };
 }
 
 const INVITATION_FIELDS = ["email", "role"] as const;

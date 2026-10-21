@@ -39,7 +39,12 @@ pnpm dev               # http://localhost:3000 (usa localhost, no 127.0.0.1)
 
 El seed también crea pisos y habitaciones ficticios: dos pisos en «Pisos Ejemplo Norte» (Madrid y Pamplona) y uno en «Habitaciones Demo Sur» (Sevilla). Sus fechas son relativas al día del `db:reset`, para que el tablero muestre siempre todos los estados (libre, libre desde, se libera pronto, ocupada, fecha vencida y no disponible). No incluye fotos.
 
-Para registrar cuentas nuevas, el email de confirmación aparece en Mailpit.
+Para el formulario público (Hito 3) hay dos habitaciones con enlace fijo:
+
+- http://localhost:3000/apply/a1000000000000000000000000000001 (Habitación 1, admite candidaturas; ya tiene dos ficticias)
+- http://localhost:3000/apply/a1000000000000000000000000000004 (Habitación 4, No disponible: formulario cerrado)
+
+Para registrar cuentas nuevas, el email de confirmación aparece en Mailpit. Los emails de la app (confirmación al candidato y aviso al operador) también llegan ahí con `EMAIL_PROVIDER=mailpit` (ver `.env.example`).
 
 ## Scripts
 

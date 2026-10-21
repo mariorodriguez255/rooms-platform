@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/card";
 import { canEditOrganization } from "@/lib/auth/permissions";
 import { getActiveMembership } from "@/lib/auth/session";
+import { createClient } from "@/lib/supabase/server";
 
 import { OrganizationForm } from "./organization-form";
 
@@ -44,6 +45,13 @@ async function OrganizationSettings() {
     getTranslations("settings.organization"),
   ]);
   const editable = canEditOrganization(active.role);
+  const supabase = await createClient();
+  const { data: organization, error } = await supabase
+    .from("organizations")
+    .select("contact_email")
+    .eq("id", active.orgId)
+    .single();
+  if (error) throw error;
   return (
     <div className="flex flex-col gap-6">
       <CardDescription>
@@ -53,6 +61,7 @@ async function OrganizationSettings() {
       <OrganizationForm
         key={active.orgId}
         name={active.orgName}
+        contactEmail={organization.contact_email ?? ""}
         editable={editable}
       />
     </div>

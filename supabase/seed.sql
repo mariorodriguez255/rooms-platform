@@ -48,10 +48,10 @@ select
   now()
 from auth.users u;
 
-insert into public.organizations (id, name)
+insert into public.organizations (id, name, contact_email)
 values
-  ('aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa', 'Pisos Ejemplo Norte'),
-  ('bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb', 'Habitaciones Demo Sur');
+  ('aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa', 'Pisos Ejemplo Norte', 'privacidad-norte@example.com'),
+  ('bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb', 'Habitaciones Demo Sur', 'privacidad-sur@example.com');
 
 insert into public.members (org_id, user_id, role)
 values
@@ -93,3 +93,34 @@ values
    'Habitación Sur 1', 35000, 35000, 10.0, '{"air_conditioning": true}', 'vacant', null),
   ('bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb', 'b1b1b1b1-0000-4000-8000-000000000001',
    'Habitación Sur 2', 36000, 36000, 11.0, '{"air_conditioning": true}', 'occupied', current_date + 10);
+
+-- Public links (milestone 3). Fixed tokens for two rooms, so that the
+-- form can be opened at http://localhost:3000/apply/<token>:
+--   Habitación 1 (free)         a1000000000000000000000000000001
+--   Habitación 4 (unavailable)  a1000000000000000000000000000004
+update public.rooms set public_token = 'a1000000000000000000000000000001' -- secret-scan:allow (fictitious seed token)
+where property_id = 'a1a1a1a1-0000-4000-8000-000000000001' and name = 'Habitación 1';
+update public.rooms set public_token = 'a1000000000000000000000000000004' -- secret-scan:allow (fictitious seed token)
+where property_id = 'a1a1a1a1-0000-4000-8000-000000000001' and name = 'Habitación 4';
+
+-- Fictitious applications, through the same function the form uses.
+select public.submit_application(
+  'a1000000000000000000000000000001', 'lucia@example.net', 'Lucía Ficticia',
+  jsonb_build_object(
+    'move_in_date', current_date + 14, 'stay_months', 9, 'occupation', 'student',
+    'schedule', 'morning', 'remote_work', 'sometimes', 'cleanliness', 4, 'noise', 2,
+    'visits', 2, 'common_areas', 3, 'smoking', 'no', 'pets', false,
+    'introduction', 'Estudio un máster y busco un piso tranquilo.', 'adult_declared', true
+  ),
+  '2026-10-21', '600000001', null
+);
+select public.submit_application(
+  'a1000000000000000000000000000001', 'marcos@example.net', 'Marcos Inventado',
+  jsonb_build_object(
+    'move_in_date', current_date + 30, 'stay_months', 12, 'occupation', 'worker',
+    'monthly_income', 1900, 'schedule', 'afternoon', 'remote_work', 'mostly',
+    'cleanliness', 3, 'noise', 3, 'visits', 3, 'common_areas', 4, 'smoking', 'outside',
+    'pets', false, 'adult_declared', true
+  ),
+  '2026-10-21', null, null
+);

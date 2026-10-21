@@ -9,18 +9,20 @@ import { TextField } from "@/components/forms/text-field";
 import { FieldGroup } from "@/components/ui/field";
 import { initialFormState, type FormState } from "@/lib/validation/form";
 
-import { renameOrganization, type OrganizationSettingsField } from "../actions";
+import { updateOrganization, type OrganizationSettingsField } from "../actions";
 
 export function OrganizationForm({
   name,
+  contactEmail,
   editable,
 }: {
   name: string;
+  contactEmail: string;
   editable: boolean;
 }) {
   const t = useTranslations();
   const [state, action] = useActionState(
-    renameOrganization,
+    updateOrganization,
     initialFormState as FormState<OrganizationSettingsField>,
   );
 
@@ -39,6 +41,16 @@ export function OrganizationForm({
           readOnly={!editable}
           defaultValue={state.values?.name ?? name}
           error={state.fieldErrors?.name}
+        />
+        <TextField
+          name="contactEmail"
+          type="email"
+          label={t("settings.organization.contactEmail")}
+          description={t("settings.organization.contactEmailHelp")}
+          maxLength={254}
+          readOnly={!editable}
+          defaultValue={state.values?.contactEmail ?? contactEmail}
+          error={state.fieldErrors?.contactEmail}
         />
         {editable ? (
           <SubmitButton className="self-start">{t("common.save")}</SubmitButton>

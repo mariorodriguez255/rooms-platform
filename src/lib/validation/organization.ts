@@ -16,6 +16,24 @@ export const organizationSchema = z.object({
   name: organizationNameSchema,
 });
 
+// Optional email: empty means none (null).
+const optionalEmailSchema = z
+  .string()
+  .trim()
+  .toLowerCase()
+  .refine(
+    (value) =>
+      value === "" ||
+      (value.length <= 254 && z.email().safeParse(value).success),
+    "emailInvalid",
+  )
+  .transform((value) => value || null);
+
+// Settings page: also the contact email shown to candidates (milestone 3).
+export const organizationSettingsSchema = organizationSchema.extend({
+  contactEmail: optionalEmailSchema,
+});
+
 export const invitationSchema = z.object({
   email: emailSchema,
   role: z.enum(INVITABLE_ROLES, "roleInvalid"),
