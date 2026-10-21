@@ -34,6 +34,140 @@ export type Database = {
   };
   public: {
     Tables: {
+      applications: {
+        Row: {
+          answers: NonNullable<Json>;
+          candidate_id: string;
+          created_at: string;
+          id: string;
+          org_id: string;
+          room_id: string;
+          updated_at: string;
+        };
+        ComputedFields: never;
+        Insert: {
+          answers: NonNullable<Json>;
+          candidate_id: string;
+          created_at?: string;
+          id?: string;
+          org_id: string;
+          room_id: string;
+          updated_at?: string;
+        };
+        Update: {
+          answers?: NonNullable<Json>;
+          candidate_id?: string;
+          created_at?: string;
+          id?: string;
+          org_id?: string;
+          room_id?: string;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "applications_org_id_candidate_id_fkey";
+            columns: ["org_id", "candidate_id"];
+            isOneToOne: false;
+            referencedRelation: "candidates";
+            referencedColumns: ["org_id", "id"];
+          },
+          {
+            foreignKeyName: "applications_org_id_room_id_fkey";
+            columns: ["org_id", "room_id"];
+            isOneToOne: false;
+            referencedRelation: "rooms";
+            referencedColumns: ["org_id", "id"];
+          },
+        ];
+      };
+      candidates: {
+        Row: {
+          created_at: string;
+          email: string;
+          id: string;
+          name: string;
+          org_id: string;
+          phone: string | null;
+          updated_at: string;
+        };
+        ComputedFields: never;
+        Insert: {
+          created_at?: string;
+          email: string;
+          id?: string;
+          name: string;
+          org_id: string;
+          phone?: string | null;
+          updated_at?: string;
+        };
+        Update: {
+          created_at?: string;
+          email?: string;
+          id?: string;
+          name?: string;
+          org_id?: string;
+          phone?: string | null;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "candidates_org_id_fkey";
+            columns: ["org_id"];
+            isOneToOne: false;
+            referencedRelation: "organizations";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      consents: {
+        Row: {
+          accepted_at: string;
+          application_id: string;
+          candidate_id: string;
+          id: string;
+          ip_hash: string | null;
+          org_id: string;
+          purpose: Database["public"]["Enums"]["consent_purpose"];
+          text_version: string;
+        };
+        ComputedFields: never;
+        Insert: {
+          accepted_at?: string;
+          application_id: string;
+          candidate_id: string;
+          id?: string;
+          ip_hash?: string | null;
+          org_id: string;
+          purpose: Database["public"]["Enums"]["consent_purpose"];
+          text_version: string;
+        };
+        Update: {
+          accepted_at?: string;
+          application_id?: string;
+          candidate_id?: string;
+          id?: string;
+          ip_hash?: string | null;
+          org_id?: string;
+          purpose?: Database["public"]["Enums"]["consent_purpose"];
+          text_version?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "consents_org_id_application_id_fkey";
+            columns: ["org_id", "application_id"];
+            isOneToOne: false;
+            referencedRelation: "applications";
+            referencedColumns: ["org_id", "id"];
+          },
+          {
+            foreignKeyName: "consents_org_id_candidate_id_fkey";
+            columns: ["org_id", "candidate_id"];
+            isOneToOne: false;
+            referencedRelation: "candidates";
+            referencedColumns: ["org_id", "id"];
+          },
+        ];
+      };
       invitations: {
         Row: {
           accepted_at: string | null;
@@ -127,17 +261,20 @@ export type Database = {
       };
       organizations: {
         Row: {
+          contact_email: string | null;
           created_at: string;
           id: string;
           name: string;
         };
         ComputedFields: never;
         Insert: {
+          contact_email?: string | null;
           created_at?: string;
           id?: string;
           name: string;
         };
         Update: {
+          contact_email?: string | null;
           created_at?: string;
           id?: string;
           name?: string;
@@ -271,6 +408,7 @@ export type Database = {
           org_id: string;
           price_cents: number;
           property_id: string;
+          public_token: string;
           size_m2: number | null;
           status: Database["public"]["Enums"]["room_status"];
           updated_at: string;
@@ -286,6 +424,7 @@ export type Database = {
           org_id: string;
           price_cents: number;
           property_id: string;
+          public_token?: string;
           size_m2?: number | null;
           status?: Database["public"]["Enums"]["room_status"];
           updated_at?: string;
@@ -300,6 +439,7 @@ export type Database = {
           org_id?: string;
           price_cents?: number;
           property_id?: string;
+          public_token?: string;
           size_m2?: number | null;
           status?: Database["public"]["Enums"]["room_status"];
           updated_at?: string;
@@ -341,8 +481,43 @@ export type Database = {
           status: string;
         }[];
       };
+      get_public_room: {
+        Args: { room_token: string };
+        Returns: {
+          accepting: boolean;
+          available_from: string;
+          city: string;
+          contact_email: string;
+          deposit_cents: number;
+          features: Json;
+          org_name: string;
+          photos: Json;
+          price_cents: number;
+          region: Database["public"]["Enums"]["spanish_region"];
+          room_name: string;
+          size_m2: number;
+          status: Database["public"]["Enums"]["room_status"];
+        }[];
+      };
+      rotate_room_token: { Args: { target_room: string }; Returns: string };
+      submit_application: {
+        Args: {
+          answers: Json;
+          candidate_email: string;
+          candidate_name: string;
+          candidate_phone: string;
+          client_ip_hash: string;
+          consent_version: string;
+          room_token: string;
+        };
+        Returns: {
+          application_id: string;
+          is_new: boolean;
+        }[];
+      };
     };
     Enums: {
+      consent_purpose: "application";
       member_role: "owner" | "admin" | "staff";
       room_status: "vacant" | "occupied" | "unavailable";
       spanish_region:
@@ -495,6 +670,7 @@ export const Constants = {
   },
   public: {
     Enums: {
+      consent_purpose: ["application"],
       member_role: ["owner", "admin", "staff"],
       room_status: ["vacant", "occupied", "unavailable"],
       spanish_region: [
