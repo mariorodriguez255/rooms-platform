@@ -3,6 +3,8 @@
 // ADR 0009). The bucket enforces the same size and type.
 
 export const MAX_PHOTO_BYTES = 3 * 1024 * 1024;
+// Per room, and per property for the common areas (database trigger).
+export const MAX_PHOTOS_PER_SET = 20;
 export const MAX_PHOTO_DIMENSION = 2048;
 export const PHOTO_CONTENT_TYPE = "image/jpeg";
 

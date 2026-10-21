@@ -6,6 +6,7 @@ import { Suspense } from "react";
 import { ConfirmActionDialog } from "@/components/actions/confirm-action-dialog";
 import { ContentSkeleton } from "@/components/layout/content-skeleton";
 import { NotFoundNotice } from "@/components/layout/not-found-notice";
+import { PhotoSection } from "@/components/photos/photo-section";
 import { RoomStateBadge } from "@/components/rooms/room-state-badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -166,6 +167,15 @@ async function PropertyDetails({
           )}
         </CardContent>
       </Card>
+
+      <PhotoSection
+        orgId={active.orgId}
+        propertyId={property.id}
+        roomId={null}
+        title={t("properties.commonPhotosTitle")}
+        description={t("properties.commonPhotosHelp")}
+        subject={property.name}
+      />
     </div>
   );
 }

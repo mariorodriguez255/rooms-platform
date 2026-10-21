@@ -6,9 +6,10 @@ import { Suspense } from "react";
 import { ConfirmActionDialog } from "@/components/actions/confirm-action-dialog";
 import { ContentSkeleton } from "@/components/layout/content-skeleton";
 import { NotFoundNotice } from "@/components/layout/not-found-notice";
+import { PhotoSection } from "@/components/photos/photo-section";
 import { RoomStateBadge } from "@/components/rooms/room-state-badge";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { canDeletePropertiesAndRooms } from "@/lib/auth/permissions";
 import { getActiveMembership } from "@/lib/auth/session";
 import { todayInSpain } from "@/lib/dates";
@@ -127,13 +128,13 @@ async function RoomDetails({
         </CardContent>
       </Card>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>
-            <h2>{t("rooms.photosTitle")}</h2>
-          </CardTitle>
-        </CardHeader>
-      </Card>
+      <PhotoSection
+        orgId={active.orgId}
+        propertyId={room.property_id}
+        roomId={room.id}
+        title={t("rooms.photosTitle")}
+        subject={room.name}
+      />
     </div>
   );
 }
