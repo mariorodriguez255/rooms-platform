@@ -6,6 +6,14 @@ const nextConfig: NextConfig = {
   agentRules: false,
   cacheComponents: true,
   partialPrefetching: true,
+  experimental: {
+    // Photos are uploaded through a Server Action, one per request, already
+    // resized to at most 3 MiB (ADR 0009). Next's default is 1 MB; Vercel
+    // rejects anything above 4.5 MB whatever this says.
+    serverActions: {
+      bodySizeLimit: "4mb",
+    },
+  },
   turbopack: {
     rules: {
       "*.css": {

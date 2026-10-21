@@ -10,6 +10,12 @@ export const SEED = {
     name: "Ana Ejemplo",
     org: "Pisos Ejemplo Norte",
   },
+  // Staff of Ana's organization.
+  bruno: {
+    email: "bruno@example.com",
+    name: "Bruno Prueba",
+    org: "Pisos Ejemplo Norte",
+  },
   carla: {
     email: "carla@example.com",
     name: "Carla Demo",

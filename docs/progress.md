@@ -8,7 +8,7 @@ Leyenda: ⬜ pendiente · 🟡 en curso · ✅ hecho
 | ------------------------------------ | --------------------------------- | ---------------------------------------------------------------------------------- |
 | 0 — Cimientos                        | ✅ Hecho (2026-10-20, PR #1)      | El proyecto arranca en local, los tests pasan y hay un despliegue de vista previa  |
 | 1 — Cuentas y organizaciones         | ✅ Hecho (2026-10-20, PR #5 y #6) | Dos organizaciones de prueba no pueden ver datos la una de la otra                 |
-| 2 — Pisos y habitaciones             | ⬜ Pendiente                      | El operador ve el estado de todas sus habitaciones en una pantalla                 |
+| 2 — Pisos y habitaciones             | ✅ Hecho (2026-10-21, PR #7)      | El operador ve el estado de todas sus habitaciones en una pantalla                 |
 | 3 — Formulario del candidato         | ⬜ Pendiente                      | Un candidato puede postularse desde el móvil sin registrarse                       |
 | 4 — Puntuación y pipeline            | ⬜ Pendiente                      | El operador ve un ranking explicado y puede aceptar a un candidato                 |
 | 5 — Bandeja de leads por email       | ⬜ Pendiente                      | Un aviso reenviado de idealista crea un lead y envía el formulario automáticamente |
@@ -123,3 +123,39 @@ Pendiente para hitos posteriores:
 - **Proxy fuera de la UE**: Vercel ejecuta `proxy.ts` en todas sus regiones (ver ADR 0003). Confirmar antes del piloto que la cookie de sesión está cubierta por el DPA de Vercel, o reducir lo que procesa el proxy.
 - Al pasar a Supabase Pro: comprobación de contraseñas filtradas. MFA más adelante.
 - Borrado de cuentas y organizaciones (y qué pasa si se borra el único owner): Hito 7.
+
+### 2026-10-21 — Hito 2: Pisos y habitaciones
+
+Plan aprobado por Mario con las recomendaciones propuestas: staff crea y edita y solo owner/admin borran; fotos también de zonas comunes; estados Libre / Ocupada / No disponible más una fecha; características de la habitación propuestas (las del piso, en el Hito 6); borrado definitivo con confirmación; límites de 100 pisos, 20 habitaciones por piso y 20 fotos por habitación y por zonas comunes.
+
+Hecho (rama `feat/hito-2`):
+
+- **Base de datos** (`…_properties_rooms_photos.sql`): `properties`, `rooms` y `photos` con RLS, claves foráneas compuestas que mantienen cada fila en la organización de su piso, importes en céntimos, permisos por columna, `updated_at` automático y límites contra abusos (ADR 0008).
+- **Storage** (`…_photos_storage.sql`): bucket privado `photos` (solo JPEG, 3 MiB) con políticas por carpeta de organización y sin sobrescritura (ADR 0009).
+- **Pisos y habitaciones**: lista de pisos, ficha del piso con sus habitaciones, suma de rentas y renta de referencia, ficha de la habitación con precio, fianza, superficie, características y estado; formularios de alta y edición; borrado con confirmación (oculto para staff).
+- **Fotos**: redimensionadas a 2048 px en el navegador (sin metadatos EXIF ni GPS), subidas una a una por Server Action, mostradas con URLs firmadas de 1 hora y borradas con la API de Storage.
+- **Tablero** (`/dashboard`): todas las habitaciones de la organización agrupadas por piso, con precio y estado (libre, libre desde, se libera el, revisar, ocupada, no disponible), contadores y filtros por grupo como enlaces.
+- **Seed** con pisos y habitaciones ficticios en todos los estados (fechas relativas al día del reset).
+- **Tests**: 170 de pgTAP (75 nuevos: pisos, habitaciones, fotos y políticas de Storage), 14 de integración (8 nuevos, también contra la API de Storage), 116 unitarios y 13 e2e × 2 (5 nuevos). Se comprobó que fallan al romper a propósito políticas de borrado de habitaciones y de lectura de Storage. Build de producción correcto.
+
+Decisiones (además de los ADR 0008 y 0009):
+
+- **«Hoy» es la fecha de Madrid** y las fechas sin hora se formatean en UTC, para que el día no cambie según el servidor.
+- **Importes sin decimales cuando son euros enteros** («450 €/mes»; «450,50 €/mes» si hay céntimos). Para 4 cifras, el formato español de Intl no agrupa los miles («1740 €»), según la norma CLDR.
+- **Sin columna de posición en las fotos**: se ordenan por fecha de subida. La propuse en el plan, pero sin poder reordenar no aportaba nada; llegará con el orden de fotos del Hito 6.
+- **El texto «Estás trabajando en…» se mantiene** encima del tablero: con varias organizaciones ayuda a saber cuál se está viendo.
+- Los tests e2e buscan dentro de `<main>` y solo en lo visible: Next mantiene ocultas las páginas anteriores y su anunciador de rutas repite el título anterior.
+- **La CI arranca ahora también Storage** (`storage-api`) en Supabase local: hasta este hito se excluía y los tests de integración de fotos no podían conectar. `imgproxy` sigue fuera (solo sirve transformaciones de imagen, que no usamos).
+
+Cierre del hito:
+
+- [x] CI en verde en el PR #7 (formato, lint, tipos, unitarios, pgTAP, integración, e2e, build y gitleaks). El primer intento falló porque la CI no arrancaba Storage (ver decisiones).
+- [x] Mario: vista previa de Vercel revisada y funcionando.
+- [x] Migraciones aplicadas en la nube (`supabase db push`, que también crea el bucket) y pgTAP contra la nube (`supabase test db --linked`): 170/170 en verde, incluidas las políticas de Storage.
+
+Pendiente para hitos posteriores:
+
+- Comprobar en un iPhone real la subida de fotos HEIC, si no se hizo en la revisión (si el navegador no puede leerlas se muestra un error, ver ADR 0009).
+- Hito 3: el formulario público mostrará las fotos con URLs firmadas generadas en el servidor; una habitación con candidaturas no se podrá borrar (solo marcar como no disponible). Añadir `rooms.public_token`.
+- Hito 6: características del piso (ascensor, wifi…) y orden de las fotos.
+- Hito 7: limpieza de archivos huérfanos si alguna vez falla un borrado en Storage. Con el plan Free (1 GB de Storage, 5 GB de transferencia al mes) basta para desarrollo; el piloto irá en Supabase Pro.

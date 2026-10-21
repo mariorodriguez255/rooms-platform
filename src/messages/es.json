@@ -15,7 +15,9 @@
     "save": "Guardar",
     "cancel": "Cancelar",
     "loading": "Cargando…",
-    "saved": "Cambios guardados."
+    "saved": "Cambios guardados.",
+    "delete": "Borrar",
+    "edit": "Editar"
   },
   "roles": {
     "owner": "Propietario",
@@ -64,7 +66,8 @@
     "submit": "Crear organización"
   },
   "nav": {
-    "dashboard": "Panel",
+    "dashboard": "Habitaciones",
+    "properties": "Pisos",
     "organization": "Organización",
     "members": "Miembros",
     "switchOrganization": "Cambiar de organización",
@@ -72,10 +75,23 @@
     "account": "Mi cuenta"
   },
   "dashboard": {
-    "title": "Panel",
+    "title": "Habitaciones",
     "welcome": "Estás trabajando en {organization}.",
-    "emptyTitle": "Aquí verás tus habitaciones",
-    "emptyDescription": "Pronto podrás dar de alta tus pisos y habitaciones y ver de un vistazo cuáles están libres, ocupadas o a punto de liberarse."
+    "emptyTitle": "Todavía no tienes pisos",
+    "emptyDescription": "Da de alta tu primer piso y sus habitaciones para ver aquí cuáles están libres, ocupadas o a punto de liberarse.",
+    "addProperty": "Añadir piso",
+    "filterLabel": "Filtrar por estado",
+    "groups": {
+      "all": "Todas",
+      "free": "Libres",
+      "soon": "Se liberan pronto",
+      "occupied": "Ocupadas",
+      "unavailable": "No disponibles"
+    },
+    "soonHelp": "Se liberan pronto: ocupadas que quedan libres en {days} días o menos, o cuya fecha ya ha pasado.",
+    "noRoomsInFilter": "Ninguna habitación en este estado.",
+    "propertyWithoutRooms": "Este piso todavía no tiene habitaciones.",
+    "addRoom": "Añadir habitación"
   },
   "settings": {
     "organization": {
@@ -144,7 +160,14 @@
     "invitationEmailMismatch": "Esta invitación es para otro email.",
     "emailNotConfirmed": "Todavía no has confirmado tu email. Busca el mensaje que te enviamos al registrarte.",
     "linkInvalid": "El enlace no es válido o ha caducado. Vuelve a intentarlo.",
-    "linkOtherBrowser": "No hemos podido abrir la sesión con ese enlace: ábrelo en el mismo navegador en el que lo pediste. Si estabas confirmando tu email, ya está confirmado: inicia sesión."
+    "linkOtherBrowser": "No hemos podido abrir la sesión con ese enlace: ábrelo en el mismo navegador en el que lo pediste. Si estabas confirmando tu email, ya está confirmado: inicia sesión.",
+    "notFound": "No encontramos lo que buscas. Puede que lo hayan borrado.",
+    "propertyLimit": "Has llegado al máximo de 100 pisos.",
+    "roomLimit": "Este piso ya tiene el máximo de 20 habitaciones.",
+    "photoLimit": "Ya hay 20 fotos aquí, el máximo. Borra alguna antes de subir más.",
+    "propertyNameTaken": "Ya tienes un piso con ese nombre.",
+    "roomNameTaken": "Este piso ya tiene una habitación con ese nombre.",
+    "photoInvalid": "Esa foto no se ha podido subir. Prueba con otra en JPG o PNG."
   },
   "validation": {
     "required": "Este campo es obligatorio.",
@@ -153,6 +176,128 @@
     "passwordTooLong": "Máximo 72 caracteres.",
     "passwordsDontMatch": "Las contraseñas no coinciden.",
     "tooLong": "Máximo 100 caracteres.",
-    "roleInvalid": "Elige un rol."
+    "roleInvalid": "Elige un rol.",
+    "addressTooLong": "Máximo 200 caracteres.",
+    "amountInvalid": "Escribe un importe en euros, por ejemplo 450 o 450,50.",
+    "priceZero": "La renta tiene que ser mayor que 0.",
+    "sizeInvalid": "Escribe los metros cuadrados, por ejemplo 12 o 12,5.",
+    "dateInvalid": "Escribe una fecha válida.",
+    "regionInvalid": "Elige una comunidad autónoma.",
+    "statusInvalid": "Elige un estado.",
+    "featureInvalid": "Elige características de la lista."
+  },
+  "roomState": {
+    "free": "Libre",
+    "freeFrom": "Libre desde el {date}",
+    "freesUp": "Se libera el {date}",
+    "freesUpToday": "Se libera hoy",
+    "overdue": "Revisar: debía liberarse el {date}",
+    "occupied": "Ocupada",
+    "unavailable": "No disponible"
+  },
+  "roomStatus": {
+    "vacant": "Libre",
+    "occupied": "Ocupada",
+    "unavailable": "No disponible (obras, uso propio…)"
+  },
+  "roomFeatures": {
+    "private_bathroom": "Baño privado",
+    "balcony": "Balcón",
+    "exterior": "Exterior",
+    "furnished": "Amueblada",
+    "double_bed": "Cama doble",
+    "desk": "Escritorio",
+    "air_conditioning": "Aire acondicionado",
+    "heating": "Calefacción",
+    "bills_included": "Gastos incluidos"
+  },
+  "regions": {
+    "ES-AN": "Andalucía",
+    "ES-AR": "Aragón",
+    "ES-AS": "Principado de Asturias",
+    "ES-CB": "Cantabria",
+    "ES-CE": "Ceuta",
+    "ES-CL": "Castilla y León",
+    "ES-CM": "Castilla-La Mancha",
+    "ES-CN": "Canarias",
+    "ES-CT": "Cataluña",
+    "ES-EX": "Extremadura",
+    "ES-GA": "Galicia",
+    "ES-IB": "Illes Balears",
+    "ES-MC": "Región de Murcia",
+    "ES-MD": "Comunidad de Madrid",
+    "ES-ML": "Melilla",
+    "ES-NC": "Comunidad Foral de Navarra",
+    "ES-PV": "País Vasco",
+    "ES-RI": "La Rioja",
+    "ES-VC": "Comunitat Valenciana"
+  },
+  "properties": {
+    "title": "Pisos",
+    "detailTitle": "Piso",
+    "backToList": "Pisos",
+    "description": "Los pisos que alquilas por habitaciones.",
+    "empty": "Todavía no has dado de alta ningún piso.",
+    "add": "Añadir piso",
+    "newTitle": "Nuevo piso",
+    "editTitle": "Editar {name}",
+    "name": "Nombre",
+    "nameHelp": "Para que lo reconozcáis tú y tu equipo. Por ejemplo: Piso Malasaña.",
+    "address": "Dirección",
+    "addressHelp": "Calle, número, planta y puerta.",
+    "city": "Municipio",
+    "region": "Comunidad autónoma",
+    "regionPlaceholder": "Elige una",
+    "totalRentReference": "Renta de referencia del piso completo (€, opcional)",
+    "totalRentReferenceHelp": "La renta mensual del piso entero, si la usas como referencia. La verás junto a la suma de las rentas de sus habitaciones.",
+    "create": "Crear piso",
+    "roomCount": "{count, plural, =0 {Sin habitaciones} one {# habitación} other {# habitaciones}}",
+    "freeCount": "{count, plural, =0 {ninguna libre} one {# libre} other {# libres}}",
+    "rentSum": "Suma de rentas: {amount}/mes",
+    "rentReference": "Referencia del piso: {amount}/mes",
+    "roomsTitle": "Habitaciones",
+    "commonPhotosTitle": "Fotos de zonas comunes",
+    "commonPhotosHelp": "Salón, cocina, baños compartidos… Servirán para los anuncios de todas las habitaciones del piso.",
+    "delete": "Borrar piso",
+    "deleteTitle": "¿Borrar {name}?",
+    "deleteDescription": "Se borrarán también sus habitaciones y todas sus fotos. No se puede deshacer.",
+    "notFound": "No encontramos este piso. Puede que lo hayan borrado."
+  },
+  "rooms": {
+    "title": "Habitación",
+    "newTitle": "Nueva habitación",
+    "editTitle": "Editar {name}",
+    "inProperty": "En {property}",
+    "name": "Nombre",
+    "nameHelp": "Por ejemplo: Habitación 1 o Habitación exterior.",
+    "price": "Renta mensual (€)",
+    "deposit": "Fianza (€, opcional)",
+    "size": "Superficie (m², opcional)",
+    "status": "Estado",
+    "availableFrom": "Fecha de liberación (opcional)",
+    "availableFromHelp": "Si está ocupada: el día que queda libre. Si está libre: desde cuándo se puede entrar. Vacía: ya se puede entrar, o no hay fecha prevista.",
+    "features": "Características",
+    "create": "Crear habitación",
+    "pricePerMonth": "{amount}/mes",
+    "sizeValue": "{size} m²",
+    "noFeatures": "Sin características indicadas.",
+    "photosTitle": "Fotos de la habitación",
+    "delete": "Borrar habitación",
+    "deleteTitle": "¿Borrar {name}?",
+    "deleteDescription": "Se borrarán también sus fotos. No se puede deshacer.",
+    "notFound": "No encontramos esta habitación. Puede que la hayan borrado.",
+    "depositValue": "Fianza: {amount}"
+  },
+  "photos": {
+    "add": "Añadir fotos",
+    "help": "JPG, PNG o WebP. Las reducimos antes de subirlas y les quitamos los datos de ubicación del móvil.",
+    "uploading": "Subiendo {current} de {total}…",
+    "empty": "Todavía no hay fotos.",
+    "count": "{count} de {max} fotos",
+    "delete": "Borrar foto",
+    "deleteTitle": "¿Borrar esta foto?",
+    "deleteDescription": "No se puede deshacer.",
+    "alt": "Foto {index} de {name}",
+    "unreadable": "No hemos podido abrir «{file}». Prueba con una foto JPG o PNG."
   }
 }

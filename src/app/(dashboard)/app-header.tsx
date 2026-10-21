@@ -22,13 +22,19 @@ export async function AppHeader() {
       {active ? (
         <nav
           aria-label={active.orgName}
-          className="order-3 flex w-full items-center gap-4 text-sm sm:order-2 sm:w-auto"
+          className="order-3 flex w-full flex-wrap items-center gap-x-4 gap-y-1 text-sm sm:order-2 sm:w-auto"
         >
           <Link
             href="/dashboard"
             className="text-muted-foreground hover:text-foreground"
           >
             {t("dashboard")}
+          </Link>
+          <Link
+            href="/properties"
+            className="text-muted-foreground hover:text-foreground"
+          >
+            {t("properties")}
           </Link>
           <Link
             href="/settings/organization"

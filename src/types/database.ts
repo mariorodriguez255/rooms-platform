@@ -144,6 +144,55 @@ export type Database = {
         };
         Relationships: [];
       };
+      photos: {
+        Row: {
+          created_at: string;
+          height: number;
+          id: string;
+          org_id: string;
+          property_id: string;
+          room_id: string | null;
+          storage_path: string;
+          width: number;
+        };
+        ComputedFields: never;
+        Insert: {
+          created_at?: string;
+          height: number;
+          id?: string;
+          org_id: string;
+          property_id: string;
+          room_id?: string | null;
+          storage_path: string;
+          width: number;
+        };
+        Update: {
+          created_at?: string;
+          height?: number;
+          id?: string;
+          org_id?: string;
+          property_id?: string;
+          room_id?: string | null;
+          storage_path?: string;
+          width?: number;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "photos_org_id_property_id_fkey";
+            columns: ["org_id", "property_id"];
+            isOneToOne: false;
+            referencedRelation: "properties";
+            referencedColumns: ["org_id", "id"];
+          },
+          {
+            foreignKeyName: "photos_property_id_room_id_fkey";
+            columns: ["property_id", "room_id"];
+            isOneToOne: false;
+            referencedRelation: "rooms";
+            referencedColumns: ["property_id", "id"];
+          },
+        ];
+      };
       profiles: {
         Row: {
           created_at: string;
@@ -165,6 +214,105 @@ export type Database = {
           user_id?: string;
         };
         Relationships: [];
+      };
+      properties: {
+        Row: {
+          address: string;
+          city: string;
+          created_at: string;
+          id: string;
+          name: string;
+          org_id: string;
+          region: Database["public"]["Enums"]["spanish_region"];
+          total_rent_reference_cents: number | null;
+          updated_at: string;
+        };
+        ComputedFields: never;
+        Insert: {
+          address: string;
+          city: string;
+          created_at?: string;
+          id?: string;
+          name: string;
+          org_id: string;
+          region: Database["public"]["Enums"]["spanish_region"];
+          total_rent_reference_cents?: number | null;
+          updated_at?: string;
+        };
+        Update: {
+          address?: string;
+          city?: string;
+          created_at?: string;
+          id?: string;
+          name?: string;
+          org_id?: string;
+          region?: Database["public"]["Enums"]["spanish_region"];
+          total_rent_reference_cents?: number | null;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "properties_org_id_fkey";
+            columns: ["org_id"];
+            isOneToOne: false;
+            referencedRelation: "organizations";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      rooms: {
+        Row: {
+          available_from: string | null;
+          created_at: string;
+          deposit_cents: number | null;
+          features: NonNullable<Json>;
+          id: string;
+          name: string;
+          org_id: string;
+          price_cents: number;
+          property_id: string;
+          size_m2: number | null;
+          status: Database["public"]["Enums"]["room_status"];
+          updated_at: string;
+        };
+        ComputedFields: never;
+        Insert: {
+          available_from?: string | null;
+          created_at?: string;
+          deposit_cents?: number | null;
+          features?: NonNullable<Json>;
+          id?: string;
+          name: string;
+          org_id: string;
+          price_cents: number;
+          property_id: string;
+          size_m2?: number | null;
+          status?: Database["public"]["Enums"]["room_status"];
+          updated_at?: string;
+        };
+        Update: {
+          available_from?: string | null;
+          created_at?: string;
+          deposit_cents?: number | null;
+          features?: NonNullable<Json>;
+          id?: string;
+          name?: string;
+          org_id?: string;
+          price_cents?: number;
+          property_id?: string;
+          size_m2?: number | null;
+          status?: Database["public"]["Enums"]["room_status"];
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "rooms_org_id_property_id_fkey";
+            columns: ["org_id", "property_id"];
+            isOneToOne: false;
+            referencedRelation: "properties";
+            referencedColumns: ["org_id", "id"];
+          },
+        ];
       };
     };
     Views: {
@@ -196,6 +344,27 @@ export type Database = {
     };
     Enums: {
       member_role: "owner" | "admin" | "staff";
+      room_status: "vacant" | "occupied" | "unavailable";
+      spanish_region:
+        | "ES-AN"
+        | "ES-AR"
+        | "ES-AS"
+        | "ES-CB"
+        | "ES-CE"
+        | "ES-CL"
+        | "ES-CM"
+        | "ES-CN"
+        | "ES-CT"
+        | "ES-EX"
+        | "ES-GA"
+        | "ES-IB"
+        | "ES-MC"
+        | "ES-MD"
+        | "ES-ML"
+        | "ES-NC"
+        | "ES-PV"
+        | "ES-RI"
+        | "ES-VC";
     };
     CompositeTypes: {
       [_ in never]: never;
@@ -327,6 +496,28 @@ export const Constants = {
   public: {
     Enums: {
       member_role: ["owner", "admin", "staff"],
+      room_status: ["vacant", "occupied", "unavailable"],
+      spanish_region: [
+        "ES-AN",
+        "ES-AR",
+        "ES-AS",
+        "ES-CB",
+        "ES-CE",
+        "ES-CL",
+        "ES-CM",
+        "ES-CN",
+        "ES-CT",
+        "ES-EX",
+        "ES-GA",
+        "ES-IB",
+        "ES-MC",
+        "ES-MD",
+        "ES-ML",
+        "ES-NC",
+        "ES-PV",
+        "ES-RI",
+        "ES-VC",
+      ],
     },
   },
 } as const;

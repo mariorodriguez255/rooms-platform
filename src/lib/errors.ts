@@ -26,6 +26,9 @@ const KNOWN_ERRORS = new Map<string, ErrorKey>(
     invitation_invalid: "invitationInvalid",
     invitation_expired: "invitationExpired",
     invitation_email_mismatch: "invitationEmailMismatch",
+    property_limit: "propertyLimit",
+    room_limit: "roomLimit",
+    photo_limit: "photoLimit",
   } satisfies Record<string, ErrorKey>),
 );
 
